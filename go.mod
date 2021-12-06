@@ -1,4 +1,4 @@
-module github.com/divilla/render
+module github.com/divilla/golastore
 
 go 1.16
 

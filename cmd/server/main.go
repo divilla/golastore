@@ -1,9 +1,9 @@
 package main
 
 import (
-	"github.com/divilla/render/pkg/html"
-	"github.com/divilla/render/pkg/html/a"
-	"github.com/divilla/render/pkg/html/e"
+	"github.com/divilla/golastore/pkg/html"
+	"github.com/divilla/golastore/pkg/html/a"
+	"github.com/divilla/golastore/pkg/html/e"
 	"github.com/labstack/echo/v4"
 	"log"
 	"net/http"

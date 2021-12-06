@@ -2,7 +2,7 @@ package html
 
 import (
 	"bytes"
-	"github.com/divilla/render/pkg/html/e"
+	"github.com/divilla/golastore/pkg/html/e"
 )
 
 type (

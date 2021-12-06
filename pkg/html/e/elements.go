@@ -1,6 +1,6 @@
 package e
 
-import "github.com/divilla/render/pkg/html/a"
+import "github.com/divilla/golastore/pkg/html/a"
 
 func Html(lang string) *E {
 	return Elm("html", []a.A{
