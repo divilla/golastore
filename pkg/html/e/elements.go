@@ -34,6 +34,10 @@ func Body(attrs ...a.A) *E {
 	return Elm("body", attrs)
 }
 
+func Nav(attrs ...a.A) *E {
+	return Elm("nav", attrs)
+}
+
 func Section(attrs ...a.A) *E {
 	return Elm("section", attrs)
 }
@@ -46,8 +50,20 @@ func P(attrs ...a.A) *E {
 	return Elm("p", attrs)
 }
 
+func A(attrs ...a.A) *E {
+	return Elm("a", attrs)
+}
+
+func I(attrs ...a.A) *E {
+	return Elm("i", attrs).Open()
+}
+
 func Div(attrs ...a.A) *E {
 	return Elm("div", attrs)
+}
+
+func Img(attrs ...a.A) *E {
+	return Elm("img", attrs)
 }
 
 func Table(attrs ...a.A) *E {
@@ -100,4 +116,12 @@ func H5(attrs ...a.A) *E {
 
 func H6(attrs ...a.A) *E {
 	return Elm("h6", attrs)
+}
+
+func Span(attrs ...a.A) *E {
+	return Elm("span", attrs)
+}
+
+func Input(attrs ...a.A) *E {
+	return Elm("input", attrs)
 }

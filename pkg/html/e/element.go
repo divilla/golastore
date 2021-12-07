@@ -29,7 +29,7 @@ func (e *E) T(text string) *E {
 	return e
 }
 
-func (e *E) C(children ...*E) *E {
+func (e *E) E(children ...*E) *E {
 	e.Children = children
 	return e
 }

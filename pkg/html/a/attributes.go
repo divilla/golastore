@@ -22,8 +22,16 @@ func (a A) Render(bb *bytes.Buffer) {
 	bb.WriteString(" " + a.K + "=\"" + a.V + "\"")
 }
 
+func Id(val string) A {
+	return Attr("id", val)
+}
+
 func Class(val string) A {
 	return Attr("class", val)
+}
+
+func Style(val string) A {
+	return Attr("style", val)
 }
 
 func Href(val string) A {
@@ -34,8 +42,40 @@ func Src(val string) A {
 	return Attr("src", val)
 }
 
+func Width(val string) A {
+	return Attr("width", val)
+}
+
+func Height(val string) A {
+	return Attr("height", val)
+}
+
 func Rel(val string) A {
 	return Attr("rel", val)
+}
+
+func Title(val string) A {
+	return Attr("title", val)
+}
+
+func Role(val string) A {
+	return Attr("role", val)
+}
+
+func AriaLabel(val string) A {
+	return Attr("aria-label", val)
+}
+
+func AriaExpanded(val string) A {
+	return Attr("aria-expanded", val)
+}
+
+func AriaHidden(val string) A {
+	return Attr("aria-hidden", val)
+}
+
+func DataTarget(val string) A {
+	return Attr("data-target", val)
 }
 
 func Integrity(val string) A {
@@ -45,3 +85,12 @@ func Integrity(val string) A {
 func Crossorigin(val string) A {
 	return Attr("crossorigin", val)
 }
+
+func Type(val string) A {
+	return Attr("type", val)
+}
+
+func Placeholder(val string) A {
+	return Attr("placeholder", val)
+}
+

@@ -1,0 +1,31 @@
+{
+  "name": "golastore",
+  "version": "1.0.0",
+  "description": "Go (lang) store - Go powered webshop",
+  "main": "assets/css/style.scss",
+  "scripts": {
+    "css-build": "node-sass --omit-source-map-url assets/css/style.scss assets/css/style.css",
+    "css-watch": "npm run css-build -- --watch",
+    "start": "npm run css-watch",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/divilla/golastore.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/divilla/golastore/issues"
+  },
+  "homepage": "https://github.com/divilla/golastore#readme",
+  "devDependencies": {
+    "@creativebulma/bulma-badge": "^1.0.1",
+    "bulma": "^0.9.3",
+    "node-sass": "^6.0.1"
+  },
+  "dependencies": {
+    "@fortawesome/fontawesome-free": "^5.15.4",
+    "@mdi/font": "^6.5.95"
+  }
+}
