@@ -11,16 +11,16 @@ import (
 )
 
 func main() {
-	e := echo.New()
-	e.Static("/assets", "assets")
+	s := echo.New()
+	s.Static("/assets", "assets")
 
 	// Middleware
 	//e.Use(middleware.Logger())
 	//e.Use(middleware.Recover())
 
-	e.GET("/", test)
+	s.GET("/", test)
 
-	e.Logger.Fatal(e.Start(":8000"))
+	s.Logger.Fatal(s.Start(":8000"))
 }
 
 func test(c echo.Context) error {
@@ -117,7 +117,7 @@ func test(c echo.Context) error {
 
 func container(params map[string]string) []*e.E {
 	var c []*e.E
-	for i:=0; i<60; i++ {
+	for i := 0; i < 60; i++ {
 		c = append(c,
 			e.Section(a.Class("section")).E(
 				e.Div(a.Class("container")).E(
