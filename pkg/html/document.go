@@ -2,16 +2,19 @@ package html
 
 import (
 	"bytes"
-	"github.com/divilla/golastore/pkg/html/e"
 )
 
 type (
+	Renderer interface {
+		Render(depth int, bb *bytes.Buffer)
+	}
+
 	D struct {
-		children []*e.E
+		children []Renderer
 	}
 )
 
-func NewDocument(children ...*e.E) *D {
+func NewDocument(children ...Renderer) *D {
 	return &D{
 		children: children,
 	}

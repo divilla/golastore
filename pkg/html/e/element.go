@@ -2,6 +2,7 @@ package e
 
 import (
 	"bytes"
+	"github.com/divilla/golastore/pkg/html"
 	"github.com/divilla/golastore/pkg/html/a"
 )
 
@@ -10,16 +11,15 @@ type (
 		Tag      string
 		Attrs    []a.A
 		Text     string
-		Children []*E
 		Hidden   bool
+		children []html.Renderer
 		open     bool
 	}
 )
 
-
 func Elm(tag string, attrs []a.A) *E {
 	return &E{
-		Tag: tag,
+		Tag:   tag,
 		Attrs: attrs,
 	}
 }
@@ -29,8 +29,8 @@ func (e *E) T(text string) *E {
 	return e
 }
 
-func (e *E) E(children ...*E) *E {
-	e.Children = children
+func (e *E) Children(children ...html.Renderer) *E {
+	e.children = children
 	return e
 }
 
@@ -39,38 +39,32 @@ func (e *E) Open() *E {
 	return e
 }
 
-func (e E) Render(depth int, bb *bytes.Buffer) {
+func (e *E) Render(depth int, bb *bytes.Buffer) {
 	if e.Hidden {
 		return
 	}
 
-	tabs(depth, bb)
+	html.Tabs(depth, bb)
 	bb.WriteString(`<` + e.Tag)
 
 	for _, attr := range e.Attrs {
 		attr.Render(bb)
 	}
 
-	if !e.open && e.Text == "" && len(e.Children) == 0 {
+	if !e.open && e.Text == "" && len(e.children) == 0 {
 		bb.WriteString(" />")
 		return
 	}
 	bb.WriteString(">" + e.Text)
 
-	if len(e.Children) > 0 {
+	if len(e.children) > 0 {
 		bb.WriteString("\n")
-		for _, elm := range e.Children {
-			elm.Render(depth + 1, bb)
+		for _, elm := range e.children {
+			elm.Render(depth+1, bb)
 			bb.WriteString("\n")
 		}
-		tabs(depth, bb)
+		html.Tabs(depth, bb)
 	}
 
 	bb.WriteString("</" + e.Tag + ">")
-}
-
-func tabs(depth int, bb *bytes.Buffer) {
-	for i := 0; i < depth; i++ {
-		bb.WriteString("    ")
-	}
 }

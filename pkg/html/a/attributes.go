@@ -1,27 +1,5 @@
 package a
 
-import "bytes"
-
-type (
-	A struct {
-		K string
-		V string
-	}
-)
-
-// Attr creates new attribute.
-func Attr(key string, val string) A {
-	return A{
-		K: key,
-		V: val,
-	}
-}
-
-// Render converts attribute to string.
-func (a A) Render(bb *bytes.Buffer) {
-	bb.WriteString(" " + a.K + "=\"" + a.V + "\"")
-}
-
 func AriaExpanded(val string) A {
 	return Attr("aria-expanded", val)
 }
@@ -38,7 +16,7 @@ func Class(val string) A {
 	return Attr("class", val)
 }
 
-func Crossorigin(val string) A {
+func CrossOrigin(val string) A {
 	return Attr("crossorigin", val)
 }
 
