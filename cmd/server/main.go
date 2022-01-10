@@ -1,10 +1,12 @@
 package main
 
 import (
-	"github.com/divilla/golastore/pkg/html/c"
+	"bytes"
 	"github.com/divilla/golastore/pkg/html/d"
+	"github.com/tidwall/gjson"
 	"log"
 	"net/http"
+	"strings"
 	"time"
 
 	"github.com/divilla/golastore/pkg/html"
@@ -22,18 +24,44 @@ func main() {
 	//e.Use(middleware.Recover())
 
 	s.GET("/", test)
+	s.GET("/bb", bb)
+	s.GET("/sw", sw)
 
 	s.Logger.Fatal(s.Start(":8000"))
 }
 
+func bb(ctx echo.Context) error {
+	var bb bytes.Buffer
+	for i := 0; i < 100000; i++ {
+		func(bb *bytes.Buffer) {
+			bb.WriteString("a")
+		}(&bb)
+	}
+	return ctx.HTMLBlob(http.StatusOK, bb.Bytes())
+}
+
+func sw(ctx echo.Context) error {
+	var sw strings.Builder
+	for i := 0; i < 100000; i++ {
+		func(bb *strings.Builder) {
+			bb.WriteString("a")
+		}(&sw)
+	}
+	return ctx.HTML(http.StatusOK, sw.String())
+}
+
 func test(ctx echo.Context) error {
 	start := time.Now()
-	d := html.NewDocument(
+	json := gjson.Parse(`{
+	"title": "Hello Bulma"
+}`)
+	l := html.NewLayout(
+		html.Block("<!DOCTYPE html>"),
 		e.Html("en-US").Children(
 			e.Head().Children(
 				e.Meta(a.A{K: "charset", V: "utf-8"}),
 				e.Meta(a.A{K: "name", V: "viewport"}, a.A{K: "content", V: "width=device-width, initial-scale=1"}),
-				e.Title().T("Hello Bulma!"),
+				e.Title().Text(json.Get("title").String()),
 				e.Link(a.A{K: "shortcut icon", V: "https://fdn.gsmarena.com/imgroot/static/favicon.ico"}),
 				e.Link(a.Rel("stylesheet"), a.Href("/assets/css/style.css")),
 			),
@@ -59,23 +87,23 @@ func test(ctx echo.Context) error {
 									e.Span(a.Class("icon is-small has-text-success-dark")).Children(
 										e.I(a.Class("fas fa-sign-in-alt")),
 									),
-									e.Span().T("Sign in"),
+									e.Span().Text("Sign in"),
 								),
 								e.A(a.Class("button is-white")).Children(
 									e.Span(a.Class("icon is-small has-text-info-dark")).Children(
 										e.I(a.Class("fas fa-user-plus")),
 									),
-									e.Span().T("Sign up"),
+									e.Span().Text("Sign up"),
 								),
 								e.A(a.Class("button is-white")).Children(
 									e.Span(a.Class("icon is-small has-text-danger-dark")).Children(
 										e.I(a.Class("fas fa-sign-out-alt")),
 									),
-									e.Span().T("Sign out"),
+									e.Span().Text("Sign out"),
 								),
 								e.A(a.Class("button is-dark")).Children(
-									e.Span(a.Class("badge is-danger"), a.Title("Cart Items")).T("8"),
-									e.Span().T("0,00 kn"),
+									e.Span(a.Class("badge is-danger"), a.Title("Cart Items")).Text("8"),
+									e.Span().Text("0,00 kn"),
 									e.Span(a.Class("icon is-small has-text-warning")).Children(
 										e.I(a.Class("fas fa-shopping-cart")),
 									),
@@ -110,20 +138,21 @@ func test(ctx echo.Context) error {
 				),
 				e.Section(a.Class("section"), a.Style("padding-top: 1.5rem")).Children(
 					d.If(false,
-						c.Text("This is text"),
+						html.Block("This is text"),
 					).Else(
-						c.HTML(`<div style="color:red">This is text`),
+						html.Block(`<div style="color:red">This is text</div>`),
 					),
 				),
 			),
 		),
 	)
 
+	var bb strings.Builder
+	l.Render(0, &bb)
 	elapsed := time.Since(start)
-	res := d.Render()
 	log.Printf("Binomial took %s\n", elapsed)
 
-	return ctx.HTMLBlob(http.StatusOK, res)
+	return ctx.HTML(http.StatusOK, bb.String())
 }
 
 func container(params map[string]string) []*e.E {
@@ -132,8 +161,8 @@ func container(params map[string]string) []*e.E {
 		c = append(c,
 			e.Section(a.Class("section")).Children(
 				e.Div(a.Class("container")).Children(
-					e.H1(a.Class("title")).T("Hello pussies!"),
-					e.P(a.Class("subtitle")).T("My first website with <strong>Bulma</strong>!"),
+					e.H1(a.Class("title")).Text("Hello pussies!"),
+					e.P(a.Class("subtitle")).Text("My first website with <strong>Bulma</strong>!"),
 				),
 			),
 		)

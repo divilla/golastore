@@ -1,8 +1,8 @@
 package d
 
 import (
-	"bytes"
 	"github.com/divilla/golastore/pkg/html"
+	"strings"
 )
 
 type (
@@ -43,7 +43,7 @@ func (d *IfDirective) Else(children ...html.Renderer) html.Renderer {
 	return d
 }
 
-func (d *IfDirective) Render(depth int, bb *bytes.Buffer) {
+func (d *IfDirective) Render(depth int, bb *strings.Builder) {
 	for _, ec := range d.ExpressionsChildren {
 		if ec.expression {
 			for _, child := range ec.children {

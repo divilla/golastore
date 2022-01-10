@@ -1,9 +1,11 @@
 package html
 
-import "bytes"
+import (
+	"strings"
+)
 
-func Tabs(depth int, bb *bytes.Buffer) {
+func Tabs(depth int, bb *strings.Builder) {
 	for i := 0; i < depth; i++ {
-		bb.WriteString("    ")
+		bb.WriteString("  ")
 	}
 }

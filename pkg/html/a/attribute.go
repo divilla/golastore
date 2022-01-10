@@ -1,6 +1,8 @@
 package a
 
-import "bytes"
+import (
+	"strings"
+)
 
 // A is the attribute definition type
 type (
@@ -19,6 +21,10 @@ func Attr(key string, val string) A {
 }
 
 // Render writes attribute to a buffer
-func (a A) Render(bb *bytes.Buffer) {
-	bb.WriteString(" " + a.K + "=\"" + a.V + "\"")
+func (a *A) Render(bb *strings.Builder) {
+	bb.WriteString(" ")
+	bb.WriteString(a.K)
+	bb.WriteString(`="`)
+	bb.WriteString(a.V)
+	bb.WriteString(`"`)
 }
