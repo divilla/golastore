@@ -3,9 +3,9 @@ VERSION ?= $(shell git describe --tags --always --dirty --match=v* 2> /dev/null 
 PACKAGES := $(shell go list ./... | grep -v /vendor/)
 LDFLAGS := -ldflags "-X main.Version=${VERSION}"
 
-CONFIG_FILE ?= ./config/local.yml
-APP_DSN ?= $(shell sed -n 's/^dsn:[[:space:]]*"\(.*\)"/\1/p' $(CONFIG_FILE))
-MIGRATE := docker run -v $(shell pwd)/migrations:/migrations --network host migrate/migrate:v4.10.0 -path=/migrations/ -database "$(APP_DSN)"
+#CONFIG_FILE ?= ./config/local.yml
+#APP_DSN ?= $(shell sed -n 's/^dsn:[[:space:]]*"\(.*\)"/\1/p' $(CONFIG_FILE))
+#MIGRATE := docker run -v $(shell pwd)/migrations:/migrations --network host migrate/migrate:v4.10.0 -path=/migrations/ -database "$(APP_DSN)"
 
 PID_FILE := './.pid'
 FSWATCH_FILE := './fswatch.cfg'
@@ -64,14 +64,14 @@ clean: ## remove temporary files
 version: ## display the version of the API server
 	@echo $(VERSION)
 
-.PHONY: db-start
-db-start: ## start the database server
+.PHONY: db-run
+db-run: ## start the database server
 	@mkdir -p data/postgresql
-	docker run -d --rm \
-		--name postgres-golastore \
+	@docker run -d \
+		--name postgresql \
 		-p 5432:5432 \
-		-v $(shell pwd)/data/postgresql:/var/lib/postgresql/data \
-		-v $(shell pwd)/data/dump:/pgdump \
+		-v $(shell pwd)/data/postgresql:/bitnami/postgresql \
+		-v $(shell pwd)/data/dump:/bitnami/postgresql/dump \
 		-e POSTGRESQL_USERNAME=postgres \
 		-e POSTGRESQL_PASSWORD=postgres \
 		-e POSTGRESQL_DATABASE=ekupi \
@@ -82,16 +82,37 @@ db-start: ## start the database server
 ##      -it
 #		-u $(UID):$(GID)
 
+.PHONY: db-start
+db-start: ## start the database server
+	docker start postgresql
+
 .PHONY: db-stop
 db-stop: ## stop the database server
-	docker stop postgres-golastore
+	docker stop postgresql
+
+.PHONY: db-remove
+db-remove: ## stop the database server
+	docker container rm postgresql
+
+DATETIME=$(shell date +'%Y-%m-%d-%H-%M-%S')
+.PHONY: db-dump
+db-dump:
+	docker exec -i \
+		-e PGPASSWORD=postgres \
+		postgresql \
+		pg_dump -Fc -U postgres -d ekupi -f "/bitnami/postgresql/dump/golastore_$(DATETIME).dump"
 
 .PHONY: db-restore
 db-restore:
 	docker exec -i \
 		-e PGPASSWORD=postgres \
-		postgres-golastore \
-		pg_restore --format=c -U postgres -d ekupi "/pgdump/ekupi-2021_12_27_19_44_48-dump.tar.gz"
+		postgresql \
+		pg_restore --format=c -U postgres -d ekupi "/bitnami/postgresql/dump/ekupi-2021_12_27_19_44_48-dump.tar.gz"
+
+LOGFILE=$(shell date +'%Y-%m-%d-%H-%M-%S')
+.PHONY: date
+date:
+	$(LOGFILE)
 
 .PHONY: testdata
 testdata: ## populate the database with test data

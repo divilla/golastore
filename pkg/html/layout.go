@@ -1,7 +1,6 @@
 package html
 
 import (
-	"github.com/tidwall/gjson"
 	"strings"
 )
 
@@ -11,9 +10,13 @@ type (
 	}
 
 	Layout struct {
-		content  Renderer
 		children []Renderer
-		data     []byte
+		view     IView
+	}
+
+	ILayout interface {
+		View(v IView) *Layout
+		Render(depth int, bb *strings.Builder)
 	}
 )
 
@@ -23,18 +26,9 @@ func NewLayout(children ...Renderer) *Layout {
 	}
 }
 
-func (l *Layout) Content(c Renderer) *Layout {
-	l.content = c
+func (l *Layout) View(v IView) *Layout {
+	l.view = v
 	return l
-}
-
-func (l *Layout) Data(d []byte) *Layout {
-	l.data = d
-	return l
-}
-
-func (l *Layout) Get(path string) string {
-	return gjson.GetBytes(l.data, path).String()
 }
 
 func (l *Layout) Render(depth int, bb *strings.Builder) {

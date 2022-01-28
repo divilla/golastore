@@ -4,24 +4,22 @@ import (
 	"bytes"
 	"github.com/divilla/golastore/framework/di"
 	"github.com/divilla/golastore/framework/middleware"
-	"github.com/divilla/golastore/internal/views/layouts"
 	"github.com/labstack/echo/v4"
-	"github.com/tidwall/gjson"
 	"net/http"
 	"strings"
 )
 
 func main() {
-	mc := di.InitMainContainer()
-
 	e := echo.New()
-	e.Use(middleware.SetCustomContext())
-	e.Use(middleware.ZapLogger(mc.Logger()))
-	e.Static("/assets", "assets")
+	c := di.NewContainer(e)
+	defer c.Close()
 
-	// Middleware
-	//e.Use(middleware.Logger())
-	//e.Use(middleware.Recover())
+	e.Use(middleware.CustomContextMiddleware())
+	e.Use(middleware.ZapLoggerMiddleware(c.Logger()))
+	e.Use(middleware.Recover())
+	e.Use(middleware.RequestID())
+	e.Static("/assets", "assets")
+	e.Debug = true
 
 	e.GET("/", test)
 	e.GET("/bb", bb)
@@ -52,15 +50,8 @@ func sw(ctx echo.Context) error {
 
 func test(ctx echo.Context) error {
 	var sb strings.Builder
-	jr := gjson.Parse(`{
-	"app": {},
-	"ctx": {},
-	"mod": {
-		"title": "Hello Bulma"
-	}
-}`)
-
-	layouts.MainLayout(&sb, &jr)
+	sb.WriteString("test")
+	//catalog.NewIndexView(layouts.NewMainLayout()).Render(0, &sb)
 
 	return ctx.HTML(http.StatusOK, sb.String())
 }

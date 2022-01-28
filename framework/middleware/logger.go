@@ -2,17 +2,29 @@ package middleware
 
 import (
 	"fmt"
+	"github.com/divilla/golastore/pkg/logger"
 	"github.com/labstack/echo/v4"
 	"go.uber.org/zap"
 	"go.uber.org/zap/zapcore"
 	"time"
 )
 
-func ZapLogger(log *zap.Logger) echo.MiddlewareFunc {
+type (
+	zapLogger struct {
+		start  time.Time
+		fields []zapcore.Field
+	}
+)
+
+func ZapLoggerMiddleware(log *logger.Logger) echo.MiddlewareFunc {
 	return func(next echo.HandlerFunc) echo.HandlerFunc {
 		return func(c echo.Context) error {
+			start := time.Now().UTC()
 			cc := NewCustomContext(c)
-			start := time.Now()
+			zl := &zapLogger{
+				start: time.Now().UTC(),
+			}
+			cc.Set(LoggerFieldsKey, zl)
 
 			err := next(c)
 			if err != nil {

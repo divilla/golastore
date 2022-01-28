@@ -16,3 +16,5 @@
 .idea
 cmd/build
 node_modules
+
+data/postgresql/data
