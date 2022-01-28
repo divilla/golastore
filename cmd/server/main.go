@@ -21,9 +21,9 @@ func main() {
 	e.Static("/assets", "assets")
 	e.Debug = true
 
-	e.GET("/", test)
-	e.GET("/bb", bb)
-	e.GET("/sw", sw)
+	//e.GET("/", test)
+	//e.GET("/bb", bb)
+	//e.GET("/sw", sw)
 
 	e.Logger.Fatal(e.Start(":8000"))
 }

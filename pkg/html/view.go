@@ -12,12 +12,10 @@ type (
 	}
 )
 
-func NewView(layout ILayout, children ...Renderer) Renderer {
-	v := &View{
+func NewView(children ...Renderer) *View {
+	return &View{
 		children: children,
 	}
-
-	return layout.View(v)
 }
 
 func (v *View) Render(depth int, bb *strings.Builder) {

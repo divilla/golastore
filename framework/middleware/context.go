@@ -1,8 +1,10 @@
 package middleware
 
 import (
+	"github.com/divilla/golastore/pkg/html"
 	"github.com/labstack/echo/v4"
 	"go.uber.org/zap"
+	"strings"
 )
 
 const (
@@ -43,6 +45,12 @@ func UseCustomContext(ccf CustomContextFunc) echo.HandlerFunc {
 	return func(ctx echo.Context) error {
 		return ccf(NewCustomContext(ctx))
 	}
+}
+
+func (cc *CustomContext) RenderView(code int, view html.IView) error {
+	sb := new(strings.Builder)
+	view.Render(0, sb)
+	return cc.HTML(code, sb.String())
 }
 
 func (cc *CustomContext) LogString(key, val string) {

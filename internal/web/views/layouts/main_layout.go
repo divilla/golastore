@@ -15,14 +15,14 @@ type (
 	}
 )
 
-func NewMainLayout(view html.IView, data IMainLayoutData) html.IView {
+func NewMainLayout(data IMainLayoutData, view html.IView) *html.Layout {
 	return html.NewLayout(
 		d.Block("<!DOCTYPE html>"),
 		e.Html("en-US").Children(
 			e.Head().Children(
 				e.Meta(a.A{K: "charset", V: "utf-8"}),
 				e.Meta(a.A{K: "name", V: "viewport"}, a.A{K: "content", V: "width=device-width, initial-scale=1"}),
-				e.Title().Text("Title"),
+				e.Title().Text(data.Title()),
 				e.Link(a.A{K: "shortcut icon", V: "https://fdn.gsmarena.com/imgroot/static/favicon.ico"}),
 				e.Link(a.Rel("stylesheet"), a.Href("/assets/css/style.css")),
 			),
