@@ -35,5 +35,9 @@ func (s *CatalogService) Category(c *CategoryDTO) *CategoryModel {
 		m.category = s.taxCache.Get(c.CategorySlug)
 	}
 
+	if m.category != s.taxCache.ProductCategories() {
+		m.title = m.category.Name + " - " + m.title
+	}
+
 	return m
 }

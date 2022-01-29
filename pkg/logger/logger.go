@@ -6,7 +6,8 @@ import (
 )
 
 type Logger struct {
-	*zap.Logger
+	zap   *zap.Logger
+	sugar *zap.SugaredLogger
 }
 
 func New() *Logger {
@@ -16,16 +17,28 @@ func New() *Logger {
 	}
 
 	return &Logger{
-		logger,
+		zap:   logger,
+		sugar: logger.Sugar(),
 	}
 }
 
+func (l *Logger) Zap() *zap.Logger {
+	return l.zap
+}
+
+func (l *Logger) Sugar() *zap.SugaredLogger {
+	return l.sugar
+}
+
 func (l *Logger) ErrorWithStack(err error) {
-	l.Fatal("fatal", zap.Error(err), zap.Stack("stack"))
+	l.sugar.Fatal("fatal", zap.Error(err), zap.Stack("stack"))
 }
 
 func (l *Logger) Close() {
-	if err := l.Sync(); err != nil {
+	if err := l.sugar.Sync(); err != nil {
+		panic(err)
+	}
+	if err := l.zap.Sync(); err != nil {
 		panic(err)
 	}
 }

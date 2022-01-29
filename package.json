@@ -20,8 +20,9 @@
   },
   "homepage": "https://github.com/divilla/golastore#readme",
   "devDependencies": {
+    "bulma": "^0.9.3",
     "@creativebulma/bulma-badge": "^1.0.1",
-    "bulma": "^0.9.3"
+    "node-sass": "^7.0.0"
   },
   "dependencies": {
     "@fortawesome/fontawesome-free": "^5.15.4",

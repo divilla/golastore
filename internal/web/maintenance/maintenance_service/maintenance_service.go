@@ -5,6 +5,7 @@ import (
 	"github.com/divilla/golastore/pkg/postgres"
 	"github.com/google/uuid"
 	"github.com/iancoleman/strcase"
+	"github.com/tidwall/sjson"
 	"regexp"
 	"strconv"
 	"strings"
@@ -108,9 +109,22 @@ func (s *MaintenanceService) RebuildTaxonomyParents(ctx context.Context) error {
 	}
 	defer conn.Release()
 
+	connExec, err := s.pool.Acquire(ctx)
+	if err != nil {
+		return err
+	}
+	defer connExec.Release()
+
+	_, err = conn.Exec(ctx, `
+		update taxonomy_item_parent set path=null;
+	`)
+	if err != nil {
+		return err
+	}
+
 	_, err = conn.Exec(ctx, `
 		update taxonomy_item_parent
-		set path=tir.name, slug='/' || tir.slug
+		set path=jsonb_build_array(jsonb_build_object('slug', til.slug, 'name', til.name), jsonb_build_object('slug', tir.slug, 'name', tir.name))
 		from taxonomy_item til
 			inner join taxonomy_item_parent tip on til.id = tip.parent_id
 			inner join taxonomy_item tir on tip.child_id = tir.id
@@ -127,19 +141,24 @@ func (s *MaintenanceService) RebuildTaxonomyParents(ctx context.Context) error {
 		from taxonomy_item til
 			inner join taxonomy_item_parent tip on til.id = tip.parent_id
 			inner join taxonomy_item tir on tip.child_id = tir.id
-		where til.root;
+		where til.root
+		order by tir.name;
 	`)
 	if err != nil {
 		return err
 	}
 	defer rows.Close()
 
+	var i int64
 	for rows.Next() {
 		var pid, cid uuid.UUID
 		err = rows.Scan(&pid, &cid)
 		if err != nil {
 			return err
 		}
+
+		i++
+		_, err = connExec.Exec(context.Background(), "update taxonomy_item_parent set position=$1 where parent_id=$2 and child_id=$3", i, pid, cid)
 
 		if err = s.rebuildTaxonomyParentsRecursive(ctx, pid, cid); err != nil {
 			return err
@@ -166,27 +185,35 @@ func (s *MaintenanceService) rebuildTaxonomyParentsRecursive(ctx context.Context
 		select
 			tipc.parent_id,
 			tipc.child_id,
-			tipp.path || ' / ' || ti.name as path,
-			tipp.slug || '/' || ti.slug as slug
+			tipp.path::text as path,
+			ti.name,
+			ti.slug
 		from taxonomy_item_parent tipp
 			inner join taxonomy_item_parent tipc on tipp.child_id = tipc.parent_id
 			inner join taxonomy_item ti on tipc.child_id = ti.id
-		where tipp.parent_id=$1 and tipp.child_id=$2;
+		where tipp.parent_id=$1 and tipp.child_id=$2
+		order by ti.name;
 	`, parentId, childId)
 	if err != nil {
 		return err
 	}
 	defer rows.Close()
 
+	var i int64
 	for rows.Next() {
 		var pid, cid uuid.UUID
-		var path, slug string
-		err = rows.Scan(&pid, &cid, &path, &slug)
+		var path, name, slug string
+		err = rows.Scan(&pid, &cid, &path, &name, &slug)
 		if err != nil {
 			return err
 		}
 
-		_, err = connExec.Exec(ctx, "update taxonomy_item_parent set path=$1, slug=$2 where parent_id=$3 and child_id=$4", path, slug, pid, cid)
+		item, _ := sjson.Set("{}", "name", name)
+		item, _ = sjson.Set(item, "slug", slug)
+		path, _ = sjson.SetRaw(path, "-1", item)
+
+		i++
+		_, err = connExec.Exec(ctx, "update taxonomy_item_parent set path=$1::jsonb, position=$2 where parent_id=$3 and child_id=$4", path, i, pid, cid)
 		if err != nil {
 			return err
 		}

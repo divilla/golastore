@@ -5,6 +5,7 @@ import (
 	"github.com/divilla/golastore/framework/di"
 	"github.com/divilla/golastore/framework/middleware"
 	"github.com/labstack/echo/v4"
+	"go.uber.org/zap"
 	"net/http"
 	"strings"
 )
@@ -25,7 +26,7 @@ func main() {
 	//e.GET("/bb", bb)
 	//e.GET("/sw", sw)
 
-	e.Logger.Fatal(e.Start(":8000"))
+	c.Logger().Sugar().With(zap.Stack("stack")).Fatal(e.Start(":8000"))
 }
 
 func bb(ctx echo.Context) error {

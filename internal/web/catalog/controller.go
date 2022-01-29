@@ -1,7 +1,6 @@
 package catalog
 
 import (
-	"fmt"
 	"github.com/divilla/golastore/framework/middleware"
 	"github.com/divilla/golastore/internal/web/catalog/catalog_service"
 	"github.com/divilla/golastore/internal/web/views/catalog"
@@ -41,8 +40,6 @@ func (c *catalogController) category(ctx *middleware.CustomContext) error {
 	}
 
 	model := c.service.Category(&dto)
-	fmt.Println(dto.CategorySlug)
-	fmt.Println(ctx.Param("category"))
 
 	return ctx.RenderView(http.StatusOK, catalog.NewIndexView(model))
 }

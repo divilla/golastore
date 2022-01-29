@@ -56,15 +56,28 @@ func ZapLoggerMiddleware(log *logger.Logger) echo.MiddlewareFunc {
 			}
 
 			n := res.Status
-			switch {
-			case n >= 500:
-				log.With(zap.Error(err)).Error("Server error", fields...)
-			case n >= 400:
-				log.With(zap.Error(err)).Warn("Client error", fields...)
-			case n >= 300:
-				log.Info("Redirection", fields...)
-			default:
-				log.Info("Success", fields...)
+			if cc.Echo().Debug {
+				switch {
+				case n >= 500:
+					log.Sugar().With("error", err, zap.Stack("stack")).Desugar().Error("Server error", fields...)
+				case n >= 400:
+					log.Zap().With(zap.Error(err)).Warn("Client error", fields...)
+				case n >= 300:
+					log.Zap().Info("Redirection", fields...)
+				default:
+					log.Zap().Info("Success", fields...)
+				}
+			} else {
+				switch {
+				case n >= 500:
+					log.Zap().With(zap.Error(err)).Error("Server error", fields...)
+				case n >= 400:
+					log.Zap().With(zap.Error(err)).Warn("Client error", fields...)
+				case n >= 300:
+					log.Zap().Info("Redirection", fields...)
+				default:
+					log.Zap().Info("Success", fields...)
+				}
 			}
 
 			return nil

@@ -6,6 +6,7 @@ import (
 	"github.com/divilla/golastore/pkg/html/a"
 	"github.com/divilla/golastore/pkg/html/d"
 	"github.com/divilla/golastore/pkg/html/e"
+	"github.com/divilla/golastore/pkg/random"
 )
 
 type (
@@ -16,6 +17,8 @@ type (
 )
 
 func NewMainLayout(data IMainLayoutData, view html.IView) *html.Layout {
+	rnd := random.MustString(32)
+
 	return html.NewLayout(
 		d.Block("<!DOCTYPE html>"),
 		e.Html("en-US").Children(
@@ -24,15 +27,15 @@ func NewMainLayout(data IMainLayoutData, view html.IView) *html.Layout {
 				e.Meta(a.A{K: "name", V: "viewport"}, a.A{K: "content", V: "width=device-width, initial-scale=1"}),
 				e.Title().Text(data.Title()),
 				e.Link(a.A{K: "shortcut icon", V: "https://fdn.gsmarena.com/imgroot/static/favicon.ico"}),
-				e.Link(a.Rel("stylesheet"), a.Href("/assets/css/style.css")),
+				e.Link(a.Rel("stylesheet"), a.Href("/assets/css/style.css?id="+rnd)),
 			),
 			e.Body().Children(
-				e.Section(a.Class("section"), a.Style("padding-top: 1.5rem")).Children(
+				e.Section(a.Class("section"), a.Style("padding: 1.5rem")).Children(
 					e.Div(a.Class("columns")).Children(
 						e.Div(a.Class("column is-2")).Children(
 							e.Img(a.Src("/assets/images/market-logo.png"), a.Width("142"), a.Height("42")),
 						),
-						e.Div(a.Class("column is-5")).Children(
+						e.Div(a.Class("column is-4")).Children(
 							e.Div(a.Class("field")).Children(
 								e.P(a.Class("control has-icons-right")).Children(
 									e.Input(a.Class("input is-rounded"), a.Type("text"), a.Placeholder("Search")),
@@ -42,7 +45,7 @@ func NewMainLayout(data IMainLayoutData, view html.IView) *html.Layout {
 								),
 							),
 						),
-						e.Div(a.Class("column is-5 is-flex is-justify-content-flex-end")).Children(
+						e.Div(a.Class("column is-6 is-flex is-justify-content-flex-end")).Children(
 							e.P(a.Class("buttons")).Children(
 								e.A(a.Class("button is-white")).Children(
 									e.Span(a.Class("icon is-small has-text-success-dark")).Children(
@@ -73,7 +76,8 @@ func NewMainLayout(data IMainLayoutData, view html.IView) *html.Layout {
 						),
 					),
 				),
-				e.Section(a.Class("section"), a.Style("padding-top: 1.5rem")).Children(
+				e.HR(a.Style("margin: 0 1.5rem;")),
+				e.Section(a.Class("section"), a.Style("padding: 1.5rem;")).Children(
 					view,
 				),
 			),

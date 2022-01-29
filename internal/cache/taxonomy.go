@@ -60,6 +60,24 @@ func (c *Taxonomy) Refresh(ctx context.Context) error {
 	}
 
 	for _, ti := range tis {
+		var parents []*domain.TaxonomyItem
+		parentSlug := ti.ParentSlug.String
+		for {
+			if parentSlug == "" {
+				break
+			}
+			parents = append(parents, c.cache[parentSlug])
+			parentSlug = c.cache[parentSlug].ParentSlug.String
+		}
+
+		if l := len(parents); l > 0 {
+			ti.Parents = make([]*domain.TaxonomyItem, l)
+			l--
+			for key, val := range parents {
+				ti.Parents[l-key] = val
+			}
+		}
+
 		if parent, ok := c.cache[ti.ParentSlug.String]; ok {
 			parent.Children = append(parent.Children, ti)
 		}

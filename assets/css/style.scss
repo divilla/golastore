@@ -1,9 +1,19 @@
 @charset "utf-8";
-@import "../../node_modules/bulma/bulma.sass";
 
-$badge-font-size: 0.8rem !default;
+@import "./node_modules/bulma/sass/utilities/initial-variables";
+@import "./node_modules/bulma/sass/utilities/functions";
+
+$red: #cc0f35;
+$radius-small: 3px;
+$menu-item-active-background-color: $red;
+
+@import "./node_modules/bulma/bulma";
+
+$badge-font-size: 12px !default;
 $badge-height: 16px !default;
-@import "../../node_modules/@creativebulma/bulma-badge/src/sass/index.sass";
+$badge-padding: 0.15rem;
+$badge-background-color: $red;
+@import "./node_modules/@creativebulma/bulma-badge/src/sass/index.sass";
 
 @import "../fonts/font-awesome/scss/fontawesome";
 @import "../fonts/font-awesome/scss/brands";
@@ -93,4 +103,11 @@ $badge-height: 16px !default;
   font-style: italic;
   font-weight: 100;
   src: url("../fonts/Roboto/Roboto-ThinItalic.ttf") format("truetype")
+}
+
+hr {
+    border: none;
+    height: 1px;
+    padding: 0;
+    background-color: #dbdbdb;
 }

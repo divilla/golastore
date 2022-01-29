@@ -11,11 +11,16 @@ type (
 		Name       string
 		Slug       string
 		Root       bool
-		Path       pgtype.Text
-		SlugPath   pgtype.Text
+		Path       []*TaxonomyPathItem
 		Position   pgtype.Int8
 		ParentId   pgtype.UUID
 		ParentSlug pgtype.Text
+		Parents    []*TaxonomyItem
 		Children   []*TaxonomyItem
+	}
+
+	TaxonomyPathItem struct {
+		Slug string `json:"slug"`
+		Name string `json:"name"`
 	}
 )

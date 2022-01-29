@@ -32,11 +32,11 @@ func (r *Taxonomy) All(ctx context.Context) ([]*domain.TaxonomyItem, error) {
 			slug,
 			root,
 			path,
-			slug_path,
 			position,
 			parent_id,
 			parent_slug
-		from taxonomy_item_view;
+		from taxonomy_item_view
+		where root or path is not null;
 	`)
 	if err != nil {
 		return nil, err
@@ -46,7 +46,7 @@ func (r *Taxonomy) All(ctx context.Context) ([]*domain.TaxonomyItem, error) {
 	var tis []*domain.TaxonomyItem
 	for rows.Next() {
 		var ti domain.TaxonomyItem
-		if err = rows.Scan(&ti.Id, &ti.Name, &ti.Slug, &ti.Root, &ti.Path, &ti.SlugPath, &ti.Position, &ti.ParentId, &ti.ParentSlug); err != nil {
+		if err = rows.Scan(&ti.Id, &ti.Name, &ti.Slug, &ti.Root, &ti.Path, &ti.Position, &ti.ParentId, &ti.ParentSlug); err != nil {
 			return nil, err
 		}
 		tis = append(tis, &ti)
