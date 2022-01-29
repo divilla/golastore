@@ -12,7 +12,7 @@ import (
 type (
 	IMainLayoutData interface {
 		Title() string
-		Category() *domain.TaxonomyItem
+		ListedCategory() *domain.TaxonomyItem
 	}
 )
 

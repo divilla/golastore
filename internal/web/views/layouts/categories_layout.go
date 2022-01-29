@@ -11,50 +11,45 @@ import (
 type (
 	ICategoriesLayoutData interface {
 		Title() string
-		Category() *domain.TaxonomyItem
+		SelectedSlug() string
+		ListedCategory() *domain.TaxonomyItem
 	}
 )
 
-func NewCategoriesLayout(data ICategoriesLayoutData, view html.IView) *html.Layout {
-	var parents []html.Renderer
+func NewCategoriesLayout(model ICategoriesLayoutData, view html.IView) *html.Layout {
+	var path []html.Renderer
 	var children []html.Renderer
-	item := data.Category()
-	selectedItem := data.Category()
+	cat := model.ListedCategory()
+	slug := model.SelectedSlug()
 	chevronDown := "<i class=\"fas fa-chevron-down\" style=\"margin-right: 6px\"></i> "
 
-	if len(item.Children) == 0 {
-		l := len(item.Parents)
-		if l > 0 {
-			item = item.Parents[l-1]
+	for k, v := range cat.Path {
+		if k == len(cat.Path)-1 {
+			break
 		}
-	}
-
-	for _, v := range item.Parents {
-		parents = append(parents,
+		path = append(path,
 			e.Li().Children(
-				e.A(a.Href("/c/"+v.Slug)).Children(e.Strong().Text(chevronDown+v.Name)),
+				e.A(a.Href("/c/"+v.Slug)).Children(
+					e.Strong().Text(chevronDown+v.Name),
+				),
 			),
 		)
 	}
 
-	for _, v := range item.Children {
+	for _, v := range cat.Children {
 		children = append(children,
 			e.Li().Children(
-				e.A(a.Href("/c/"+v.Slug), a.Class(d.Ifs(v.Slug == selectedItem.Slug, "is-active").String())).
+				e.A(a.Href("/c/"+v.Slug), a.Class(d.Ifs(v.Slug == slug, "is-active").String())).
 					Text(v.Name),
 			),
 		)
 	}
 
-	slug := item.Slug
-	if item.ParentSlug.String != "" {
-		slug = item.ParentSlug.String
-	}
-	if item.Slug != selectedItem.Slug {
-		parents = append(parents,
+	if cat.Slug != slug {
+		path = append(path,
 			e.Li().Children(
 				e.A(a.Href("/c/"+slug)).
-					Text(chevronDown+item.Name),
+					Text(chevronDown+cat.Name),
 			),
 			e.Li().Children(
 				e.Ul(a.Class("menu-list")).Children(
@@ -63,10 +58,10 @@ func NewCategoriesLayout(data ICategoriesLayoutData, view html.IView) *html.Layo
 			),
 		)
 	} else {
-		parents = append(parents,
+		path = append(path,
 			e.Li().Children(
 				e.A(a.Href("/c/"+slug), a.Class("is-active")).
-					Text(chevronDown+item.Name),
+					Text(chevronDown+cat.Name),
 				e.Ul().Children(
 					children...,
 				),
@@ -74,12 +69,12 @@ func NewCategoriesLayout(data ICategoriesLayoutData, view html.IView) *html.Layo
 		)
 	}
 
-	return NewMainLayout(data, html.NewLayout(
+	return NewMainLayout(model, html.NewLayout(
 		e.Div(a.Class("columns")).Children(
 			e.Div(a.Class("column is-one-quarter"), a.Style("max-width: 300px")).Children(
 				e.Aside(a.Class("menu")).Children(
 					e.Ul(a.Class("menu-list")).Children(
-						parents...,
+						path...,
 					),
 				),
 			),

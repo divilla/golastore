@@ -15,7 +15,6 @@ type (
 		Position   pgtype.Int8
 		ParentId   pgtype.UUID
 		ParentSlug pgtype.Text
-		Parents    []*TaxonomyItem
 		Children   []*TaxonomyItem
 	}
 

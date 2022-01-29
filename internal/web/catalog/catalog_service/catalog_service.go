@@ -25,18 +25,19 @@ func NewCatalogService(appCache *cache.App, taxCache *cache.Taxonomy) *CatalogSe
 }
 
 func (s *CatalogService) Category(c *CategoryDTO) *CategoryModel {
-	m := &CategoryModel{
-		title: s.appCache.Title(),
-	}
+	m := &CategoryModel{}
 
-	if c.CategorySlug == "" {
-		m.category = s.taxCache.ProductCategories()
+	m.title = s.appCache.Title()
+	if c.CategorySlug == "" || c.CategorySlug == s.taxCache.ProductCategoriesRoot().Slug {
+		m.listedCategory = s.taxCache.ProductCategoriesRoot()
+		m.selectedSlug = m.listedCategory.Slug
 	} else {
-		m.category = s.taxCache.Get(c.CategorySlug)
+		m.selectedSlug = c.CategorySlug
+		m.listedCategory = s.taxCache.Get(m.selectedSlug)
+		m.title = m.listedCategory.Name + " - " + m.title
 	}
-
-	if m.category != s.taxCache.ProductCategories() {
-		m.title = m.category.Name + " - " + m.title
+	if len(m.listedCategory.Children) == 0 && m.listedCategory.ParentSlug.String != "" {
+		m.listedCategory = s.taxCache.Get(m.listedCategory.ParentSlug.String)
 	}
 
 	return m

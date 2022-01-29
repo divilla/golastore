@@ -9,9 +9,10 @@ type (
 	}
 
 	CategoryModel struct {
-		title    string
-		category *domain.TaxonomyItem
-		products string
+		title          string
+		selectedSlug   string
+		listedCategory *domain.TaxonomyItem
+		products       string
 	}
 )
 
@@ -19,6 +20,10 @@ func (m *CategoryModel) Title() string {
 	return m.title
 }
 
-func (m *CategoryModel) Category() *domain.TaxonomyItem {
-	return m.category
+func (m *CategoryModel) SelectedSlug() string {
+	return m.selectedSlug
+}
+
+func (m *CategoryModel) ListedCategory() *domain.TaxonomyItem {
+	return m.listedCategory
 }

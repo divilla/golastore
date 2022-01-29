@@ -38,7 +38,6 @@ func (c *catalogController) category(ctx *middleware.CustomContext) error {
 	if err := ctx.Bind(&dto); err != nil {
 		return err
 	}
-
 	model := c.service.Category(&dto)
 
 	return ctx.RenderView(http.StatusOK, catalog.NewIndexView(model))
