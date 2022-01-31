@@ -1,46 +1,59 @@
 package catalog_service
 
 import (
+	"context"
 	"github.com/divilla/golastore/internal/cache"
-	"github.com/google/uuid"
+	"github.com/divilla/golastore/internal/repository"
+	"strings"
 )
 
 type (
 	CatalogService struct {
-		appCache *cache.App
-		taxCache *cache.Taxonomy
-	}
-
-	ProductItem struct {
-		Id   uuid.UUID
-		Name string
+		appCache    *cache.App
+		taxCache    *cache.Taxonomy
+		productRepo *repository.Product
 	}
 )
 
-func NewCatalogService(appCache *cache.App, taxCache *cache.Taxonomy) *CatalogService {
+func NewCatalogService(appCache *cache.App, taxCache *cache.Taxonomy, productRepo *repository.Product) *CatalogService {
 	return &CatalogService{
-		appCache: appCache,
-		taxCache: taxCache,
+		appCache:    appCache,
+		taxCache:    taxCache,
+		productRepo: productRepo,
 	}
 }
 
-func (s *CatalogService) Category(c *CategoryDTO) *CategoryModel {
-	m := &CategoryModel{}
+func (s *CatalogService) Category(ctx context.Context, dto *CategoryDTO) (*CategoryModel, error) {
+	model := &CategoryModel{
+		productsPerPage: 30,
+	}
 
-	m.title = s.appCache.Title()
-	if c.CategorySlug == "" || c.CategorySlug == s.taxCache.ProductCategoriesRoot().Slug {
-		m.selectedCategory = s.taxCache.ProductCategoriesRoot()
-		m.listedCategory = s.taxCache.ProductCategoriesRoot()
-		m.selectedSlug = m.listedCategory.Slug
+	model.title = s.appCache.Title()
+	if dto.CategorySlug == "" || dto.CategorySlug == s.taxCache.ProductCategoriesRoot().Slug {
+		model.selectedCategory = s.taxCache.ProductCategoriesRoot()
+		model.listedCategory = s.taxCache.ProductCategoriesRoot()
+		model.selectedSlug = model.listedCategory.Slug
 	} else {
-		m.selectedSlug = c.CategorySlug
-		m.selectedCategory = s.taxCache.Get(m.selectedSlug)
-		m.listedCategory = s.taxCache.Get(m.selectedSlug)
-		m.title = m.listedCategory.Name + " - " + m.title
+		model.selectedSlug = dto.CategorySlug
+		model.selectedCategory = s.taxCache.Get(model.selectedSlug)
+		model.listedCategory = s.taxCache.Get(model.selectedSlug)
+		model.title = model.listedCategory.Name + " - " + model.title
 	}
-	if len(m.listedCategory.Children) == 0 && m.listedCategory.ParentSlug.String != "" {
-		m.listedCategory = s.taxCache.Get(m.listedCategory.ParentSlug.String)
+	if len(model.listedCategory.Children) == 0 && model.listedCategory.ParentSlug.String != "" {
+		model.listedCategory = s.taxCache.Get(model.listedCategory.ParentSlug.String)
 	}
 
-	return m
+	model.currentPage = dto.Page
+	if model.currentPage < 1 {
+		model.currentPage = 1
+	}
+	search := strings.ReplaceAll(model.SelectedCategory().Id.String(), "-", "")
+	pl, pages, err := s.productRepo.Search(ctx, search, model.productsPerPage, model.currentPage)
+	if err != nil {
+		return nil, err
+	}
+	model.totalPages = pages
+	model.productsList = pl
+
+	return model, nil
 }

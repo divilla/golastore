@@ -18,39 +18,52 @@ func NewProductRepository(pool *postgres.Pool) *Product {
 	}
 }
 
-func (r *Taxonomy) Search(ctx context.Context, fts string, records, page int64) ([]*domain.TaxonomyItem, error) {
+func (r *Product) Search(ctx context.Context, search string, perPage, page int64) ([]*domain.ListProduct, int64, error) {
 	conn, err := r.pool.Acquire(ctx)
 	if err != nil {
-		return nil, err
+		return nil, 0, err
 	}
 	defer conn.Release()
 
+	var total int64
+	row := conn.QueryRow(ctx, `
+		select product_fts_count($1) as total
+	`, search)
+	if row.Scan(&total) != nil {
+		return nil, 0, err
+	}
+
+	pages := total / perPage
+	if total%perPage > 0 {
+		pages++
+	}
+
+	limit := perPage
+	offset := (page - 1) * perPage
 	rows, err := conn.Query(ctx, `
 		select
 			id,
 			name,
 			slug,
-			root,
-			path,
-			position,
-			parent_id,
-			parent_slug
-		from taxonomy_item_view
-		where root or path is not null;
-	`)
+			old_price,
+			price,
+			description
+		from
+			product_fts_search($1, $2, $3);
+	`, search, limit, offset)
 	if err != nil {
-		return nil, err
+		return nil, pages, err
 	}
 	defer rows.Close()
 
-	var tis []*domain.TaxonomyItem
+	var lps []*domain.ListProduct
 	for rows.Next() {
-		var ti domain.TaxonomyItem
-		if err = rows.Scan(&ti.Id, &ti.Name, &ti.Slug, &ti.Root, &ti.Path, &ti.Position, &ti.ParentId, &ti.ParentSlug); err != nil {
-			return nil, err
+		var lp domain.ListProduct
+		if err = rows.Scan(&lp.Id, &lp.Name, &lp.Slug, &lp.OldPrice, &lp.Price, &lp.Description); err != nil {
+			return nil, pages, err
 		}
-		tis = append(tis, &ti)
+		lps = append(lps, &lp)
 	}
 
-	return tis, nil
+	return lps, pages, nil
 }

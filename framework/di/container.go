@@ -29,10 +29,11 @@ func NewContainer(e *echo.Echo) *Container {
 	appCache := cache.NewAppCache()
 
 	taxonomyRepository := repository.NewTaxonomyRepository(pool)
+	productRepository := repository.NewProductRepository(pool)
 	//taxonomyService := service.NewTaxonomyService(taxonomyRepository)
 	taxonomyCache := cache.NewTaxonomyCache(taxonomyRepository)
 
-	catalogService := catalog_service.NewCatalogService(appCache, taxonomyCache)
+	catalogService := catalog_service.NewCatalogService(appCache, taxonomyCache, productRepository)
 	catalog.NewController(e, catalogService)
 
 	maintenanceService := maintenance_service.New(pool)

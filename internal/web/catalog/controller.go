@@ -28,7 +28,14 @@ func NewController(e *echo.Echo, service *catalog_service.CatalogService) {
 
 func (c *catalogController) index(ctx *middleware.CustomContext) error {
 	var dto catalog_service.CategoryDTO
-	model := c.service.Category(&dto)
+	if err := ctx.Bind(&dto); err != nil {
+		return err
+	}
+
+	model, err := c.service.Category(ctx.Request().Context(), &dto)
+	if err != nil {
+		return err
+	}
 
 	return ctx.RenderView(http.StatusOK, catalog.NewIndexView(model))
 }
@@ -38,7 +45,11 @@ func (c *catalogController) category(ctx *middleware.CustomContext) error {
 	if err := ctx.Bind(&dto); err != nil {
 		return err
 	}
-	model := c.service.Category(&dto)
+
+	model, err := c.service.Category(ctx.Request().Context(), &dto)
+	if err != nil {
+		return err
+	}
 
 	return ctx.RenderView(http.StatusOK, catalog.NewIndexView(model))
 }

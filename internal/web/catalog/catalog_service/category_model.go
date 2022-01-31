@@ -6,6 +6,7 @@ type (
 	CategoryDTO struct {
 		Search       string `param:"search"`
 		CategorySlug string `param:"category"`
+		Page         int64  `param:"currentPage"`
 	}
 
 	CategoryModel struct {
@@ -13,6 +14,9 @@ type (
 		selectedSlug     string
 		selectedCategory *domain.TaxonomyItem
 		listedCategory   *domain.TaxonomyItem
+		productsPerPage  int64
+		currentPage      int64
+		totalPages       int64
 		productsList     []*domain.ListProduct
 	}
 )
@@ -31,6 +35,18 @@ func (m *CategoryModel) SelectedCategory() *domain.TaxonomyItem {
 
 func (m *CategoryModel) ListedCategory() *domain.TaxonomyItem {
 	return m.listedCategory
+}
+
+func (m *CategoryModel) ProductsPerPage() int64 {
+	return m.productsPerPage
+}
+
+func (m *CategoryModel) CurrentPage() int64 {
+	return m.currentPage
+}
+
+func (m *CategoryModel) TotalPages() int64 {
+	return m.totalPages
 }
 
 func (m *CategoryModel) ProductsList() []*domain.ListProduct {
