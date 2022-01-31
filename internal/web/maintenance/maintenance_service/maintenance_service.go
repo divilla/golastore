@@ -223,3 +223,73 @@ func (s *MaintenanceService) rebuildTaxonomyParentsRecursive(ctx context.Context
 
 	return nil
 }
+
+func (s *MaintenanceService) FixProducts(ctx context.Context) error {
+	conn, err := s.pool.Acquire(ctx)
+	if err != nil {
+		return err
+	}
+	defer conn.Release()
+
+	connExec, err := s.pool.Acquire(ctx)
+	if err != nil {
+		return err
+	}
+	defer connExec.Release()
+
+	rows, err := conn.Query(ctx, `
+		select
+			id,
+			name,
+			description
+		from product;
+	`)
+	if err != nil {
+		return err
+	}
+	defer rows.Close()
+
+	var re = regexp.MustCompile(`ID\s\sEK\d\d\d.+`)
+	regWord := regexp.MustCompile(`[^\w]`)
+	regSpace := regexp.MustCompile(`\s+`)
+	regSpanOpen := regexp.MustCompile(`<span>[\s\r\n]+`)
+	regSpanClose := regexp.MustCompile(`</span>[\s\r\n]+`)
+	for rows.Next() {
+		var id uuid.UUID
+		var name, slug, description string
+		err = rows.Scan(&id, &name, &description)
+		if err != nil {
+			return err
+		}
+
+		name = re.ReplaceAllString(name, "")
+		slug = strings.ToLower(name)
+		slug = strings.ReplaceAll(slug, "č", "c")
+		slug = strings.ReplaceAll(slug, "ć", "c")
+		slug = strings.ReplaceAll(slug, "đ", "d")
+		slug = strings.ReplaceAll(slug, "š", "s")
+		slug = strings.ReplaceAll(slug, "ž", "z")
+
+		slug = regWord.ReplaceAllString(slug, " ")
+		slug = regSpace.ReplaceAllString(slug, " ")
+		slug = strcase.ToKebab(slug)
+
+		description = regSpanOpen.ReplaceAllString(description, "")
+		description = regSpanClose.ReplaceAllString(description, "")
+
+		_, err = connExec.Exec(ctx, "update product set name=$1, slug=$2, description=$3 where id=$4", name, slug, description, id)
+		if err != nil {
+			for i := 1; i < 30; i++ {
+				_, err = connExec.Exec(ctx, "update product set name=$1, slug=$2, description=$3 where id=$4", name, slug+"-"+strconv.Itoa(i), description, id)
+				if err == nil {
+					break
+				}
+			}
+			if err != nil {
+				return err
+			}
+		}
+	}
+
+	return nil
+}

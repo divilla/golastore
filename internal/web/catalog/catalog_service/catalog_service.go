@@ -29,10 +29,12 @@ func (s *CatalogService) Category(c *CategoryDTO) *CategoryModel {
 
 	m.title = s.appCache.Title()
 	if c.CategorySlug == "" || c.CategorySlug == s.taxCache.ProductCategoriesRoot().Slug {
+		m.selectedCategory = s.taxCache.ProductCategoriesRoot()
 		m.listedCategory = s.taxCache.ProductCategoriesRoot()
 		m.selectedSlug = m.listedCategory.Slug
 	} else {
 		m.selectedSlug = c.CategorySlug
+		m.selectedCategory = s.taxCache.Get(m.selectedSlug)
 		m.listedCategory = s.taxCache.Get(m.selectedSlug)
 		m.title = m.listedCategory.Name + " - " + m.title
 	}

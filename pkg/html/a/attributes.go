@@ -4,6 +4,10 @@ func AriaExpanded(val string) A {
 	return Attr("aria-expanded", val)
 }
 
+func AriaCurrent(val string) A {
+	return Attr("aria-current", val)
+}
+
 func AriaHidden(val string) A {
 	return Attr("aria-hidden", val)
 }

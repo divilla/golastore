@@ -5,7 +5,10 @@
 
 $red: #cc0f35;
 $radius-small: 3px;
+
 $menu-item-active-background-color: $red;
+
+$breadcrumb-item-padding-vertical: 0.5em;
 
 @import "./node_modules/bulma/bulma";
 

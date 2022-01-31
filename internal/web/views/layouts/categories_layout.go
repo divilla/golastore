@@ -12,6 +12,7 @@ type (
 	ICategoriesLayoutData interface {
 		Title() string
 		SelectedSlug() string
+		SelectedCategory() *domain.TaxonomyItem
 		ListedCategory() *domain.TaxonomyItem
 	}
 )
@@ -69,6 +70,26 @@ func NewCategoriesLayout(model ICategoriesLayoutData, view html.IView) *html.Lay
 		)
 	}
 
+	var breadcrunbs []html.Renderer
+	l := len(model.SelectedCategory().Path) - 1
+	for key, item := range model.SelectedCategory().Path {
+		if key == l {
+			breadcrunbs = append(breadcrunbs,
+				e.Li(a.Class("is-active")).Children(
+					e.A(a.Href("/c/"+item.Slug), a.AriaCurrent("page")).Children(
+						e.H1().Text(item.Name),
+					),
+				),
+			)
+		} else {
+			breadcrunbs = append(breadcrunbs,
+				e.Li().Children(
+					e.A(a.Href("/c/"+item.Slug)).Text(item.Name),
+				),
+			)
+		}
+	}
+
 	return NewMainLayout(model, html.NewLayout(
 		e.Div(a.Class("columns")).Children(
 			e.Div(a.Class("column is-one-quarter"), a.Style("max-width: 300px")).Children(
@@ -79,7 +100,12 @@ func NewCategoriesLayout(model ICategoriesLayoutData, view html.IView) *html.Lay
 				),
 			),
 			e.Div(a.Class("column")).Children(
-				view,
+				e.Nav(a.Class("breadcrumb has-bullet-separator"), a.AriaLabel("breadcrumbs")).Children(
+					e.Ul().Children(
+						breadcrunbs...,
+					),
+				),
+				//view,
 			),
 		),
 	))

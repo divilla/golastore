@@ -9,10 +9,11 @@ type (
 	}
 
 	CategoryModel struct {
-		title          string
-		selectedSlug   string
-		listedCategory *domain.TaxonomyItem
-		products       string
+		title            string
+		selectedSlug     string
+		selectedCategory *domain.TaxonomyItem
+		listedCategory   *domain.TaxonomyItem
+		productsList     []*domain.ListProduct
 	}
 )
 
@@ -24,6 +25,14 @@ func (m *CategoryModel) SelectedSlug() string {
 	return m.selectedSlug
 }
 
+func (m *CategoryModel) SelectedCategory() *domain.TaxonomyItem {
+	return m.selectedCategory
+}
+
 func (m *CategoryModel) ListedCategory() *domain.TaxonomyItem {
 	return m.listedCategory
+}
+
+func (m *CategoryModel) ProductsList() []*domain.ListProduct {
+	return m.productsList
 }
