@@ -51,5 +51,5 @@ func (c *catalogController) category(ctx *middleware.CustomContext) error {
 		return err
 	}
 
-	return ctx.RenderView(http.StatusOK, catalog.NewIndexView(model))
+	return ctx.RenderView(http.StatusOK, catalog.NewCategoryView(model))
 }

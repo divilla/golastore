@@ -43,6 +43,7 @@ func (r *Product) Search(ctx context.Context, search string, perPage, page int64
 	rows, err := conn.Query(ctx, `
 		select
 			id,
+			code,
 			name,
 			slug,
 			old_price,
@@ -59,7 +60,7 @@ func (r *Product) Search(ctx context.Context, search string, perPage, page int64
 	var lps []*domain.ListProduct
 	for rows.Next() {
 		var lp domain.ListProduct
-		if err = rows.Scan(&lp.Id, &lp.Name, &lp.Slug, &lp.OldPrice, &lp.Price, &lp.Description); err != nil {
+		if err = rows.Scan(&lp.Id, &lp.Code, &lp.Name, &lp.Slug, &lp.OldPrice, &lp.Price, &lp.Description); err != nil {
 			return nil, pages, err
 		}
 		lps = append(lps, &lp)

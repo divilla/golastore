@@ -105,7 +105,7 @@ func NewCategoriesLayout(model ICategoriesLayoutData, view html.IView) *html.Lay
 						breadcrunbs...,
 					),
 				),
-				//view,
+				view,
 			),
 		),
 	))

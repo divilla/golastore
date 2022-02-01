@@ -1,5 +1,9 @@
 package a
 
+func Alt(val string) A {
+	return Attr("alt", val)
+}
+
 func AriaExpanded(val string) A {
 	return Attr("aria-expanded", val)
 }
