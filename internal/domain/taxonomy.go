@@ -3,6 +3,8 @@ package domain
 import (
 	"github.com/google/uuid"
 	"github.com/jackc/pgtype"
+	"golang.org/x/text/language"
+	"golang.org/x/text/message"
 )
 
 type (
@@ -11,6 +13,7 @@ type (
 		Name       string
 		Slug       string
 		Root       bool
+		Properties TaxonomyProperties
 		Path       []*TaxonomyPathItem
 		Position   pgtype.Int8
 		ParentId   pgtype.UUID
@@ -22,4 +25,13 @@ type (
 		Slug string `json:"slug"`
 		Name string `json:"name"`
 	}
+
+	TaxonomyProperties struct {
+		TotalProducts int64 `json:"totalProducts"`
+	}
 )
+
+func (t *TaxonomyItem) TotalProducts() string {
+	p := message.NewPrinter(language.BritishEnglish)
+	return p.Sprintf("%d", t.Properties.TotalProducts)
+}

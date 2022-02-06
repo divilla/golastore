@@ -14,8 +14,9 @@ type (
 		selectedSlug     string
 		selectedCategory *domain.TaxonomyItem
 		listedCategory   *domain.TaxonomyItem
-		productsPerPage  int64
 		currentPage      int64
+		productsPerPage  int64
+		totalProducts    int64
 		totalPages       int64
 		productsList     []*domain.ListProduct
 	}
@@ -37,16 +38,20 @@ func (m *CategoryModel) ListedCategory() *domain.TaxonomyItem {
 	return m.listedCategory
 }
 
-func (m *CategoryModel) ProductsPerPage() int64 {
-	return m.productsPerPage
-}
-
 func (m *CategoryModel) CurrentPage() int64 {
 	return m.currentPage
 }
 
+func (m *CategoryModel) ProductsPerPage() int64 {
+	return m.productsPerPage
+}
+
 func (m *CategoryModel) TotalPages() int64 {
 	return m.totalPages
+}
+
+func (m *CategoryModel) TotalProducts() int64 {
+	return m.totalProducts
 }
 
 func (m *CategoryModel) ProductsList() []*domain.ListProduct {

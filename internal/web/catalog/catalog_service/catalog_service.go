@@ -48,11 +48,12 @@ func (s *CatalogService) Category(ctx context.Context, dto *CategoryDTO) (*Categ
 		model.currentPage = 1
 	}
 	search := strings.ReplaceAll(model.SelectedCategory().Id.String(), "-", "")
-	pl, pages, err := s.productRepo.Search(ctx, search, model.productsPerPage, model.currentPage)
+	pl, pages, total, err := s.productRepo.Search(ctx, search, model.productsPerPage, model.currentPage)
 	if err != nil {
 		return nil, err
 	}
 	model.totalPages = pages
+	model.totalProducts = total
 	model.productsList = pl
 
 	return model, nil

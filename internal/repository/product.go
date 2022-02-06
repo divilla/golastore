@@ -18,10 +18,10 @@ func NewProductRepository(pool *postgres.Pool) *Product {
 	}
 }
 
-func (r *Product) Search(ctx context.Context, search string, perPage, page int64) ([]*domain.ListProduct, int64, error) {
+func (r *Product) Search(ctx context.Context, search string, perPage, page int64) ([]*domain.ListProduct, int64, int64, error) {
 	conn, err := r.pool.Acquire(ctx)
 	if err != nil {
-		return nil, 0, err
+		return nil, 0, 0, err
 	}
 	defer conn.Release()
 
@@ -30,7 +30,7 @@ func (r *Product) Search(ctx context.Context, search string, perPage, page int64
 		select product_fts_count($1) as total
 	`, search)
 	if row.Scan(&total) != nil {
-		return nil, 0, err
+		return nil, 0, total, err
 	}
 
 	pages := total / perPage
@@ -53,7 +53,7 @@ func (r *Product) Search(ctx context.Context, search string, perPage, page int64
 			product_fts_search($1, $2, $3);
 	`, search, limit, offset)
 	if err != nil {
-		return nil, pages, err
+		return nil, pages, total, err
 	}
 	defer rows.Close()
 
@@ -61,10 +61,10 @@ func (r *Product) Search(ctx context.Context, search string, perPage, page int64
 	for rows.Next() {
 		var lp domain.ListProduct
 		if err = rows.Scan(&lp.Id, &lp.Code, &lp.Name, &lp.Slug, &lp.OldPrice, &lp.Price, &lp.Description); err != nil {
-			return nil, pages, err
+			return nil, pages, total, err
 		}
 		lps = append(lps, &lp)
 	}
 
-	return lps, pages, nil
+	return lps, pages, total, nil
 }

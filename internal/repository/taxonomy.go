@@ -31,6 +31,7 @@ func (r *Taxonomy) All(ctx context.Context) ([]*domain.TaxonomyItem, error) {
 			name,
 			slug,
 			root,
+			properties,
 			path,
 			position,
 			parent_id,
@@ -46,7 +47,7 @@ func (r *Taxonomy) All(ctx context.Context) ([]*domain.TaxonomyItem, error) {
 	var tis []*domain.TaxonomyItem
 	for rows.Next() {
 		var ti domain.TaxonomyItem
-		if err = rows.Scan(&ti.Id, &ti.Name, &ti.Slug, &ti.Root, &ti.Path, &ti.Position, &ti.ParentId, &ti.ParentSlug); err != nil {
+		if err = rows.Scan(&ti.Id, &ti.Name, &ti.Slug, &ti.Root, &ti.Properties, &ti.Path, &ti.Position, &ti.ParentId, &ti.ParentSlug); err != nil {
 			return nil, err
 		}
 		tis = append(tis, &ti)

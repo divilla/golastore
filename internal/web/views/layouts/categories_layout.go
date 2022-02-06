@@ -1,6 +1,7 @@
 package layouts
 
 import (
+	"fmt"
 	"github.com/divilla/golastore/internal/domain"
 	"github.com/divilla/golastore/pkg/html"
 	"github.com/divilla/golastore/pkg/html/a"
@@ -41,7 +42,7 @@ func NewCategoriesLayout(model ICategoriesLayoutData, view html.IView) *html.Lay
 		children = append(children,
 			e.Li().Children(
 				e.A(a.Href("/c/"+v.Slug), a.Class(d.Ifs(v.Slug == slug, "is-active").String())).
-					Text(v.Name),
+					Text(fmt.Sprintf("%s (%s)", v.Name, v.TotalProducts())),
 			),
 		)
 	}
