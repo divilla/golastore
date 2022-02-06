@@ -1,0 +1,3 @@
+package preact
+
+class
