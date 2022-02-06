@@ -1,5 +1,6 @@
 import _ from './lodash.js';
 import { InvalidArgumentError } from './errors.js';
+import { hasOwnProperty } from './utils.js';
 
 function Messenger() {
   const subscriptions = [];
@@ -17,10 +18,10 @@ function Messenger() {
       throw new InvalidArgumentError('"to" is not valid object');
     }
 
-    if (!_.isNil(to.channel)) {
+    if (hasOwnProperty(to, 'channel')) {
       sub.channel = to.channel;
     }
-    if (!_.isNil(to.topic)) {
+    if (hasOwnProperty(to, 'topic')) {
       sub.topic = to.topic;
     }
 
@@ -31,10 +32,10 @@ function Messenger() {
     if (!_.isObject(to)) {
       throw new InvalidArgumentError('"to" is not valid object');
     }
-    if (_.isNil(to.channel)) {
+    if (!hasOwnProperty(to, 'channel')) {
       throw new InvalidArgumentError('"to.channel" is required');
     }
-    if (!_.isNil(states[to.channel])) {
+    if (hasOwnProperty(states, to.channel)) {
       handler(states[to.channel]);
     }
 
@@ -59,20 +60,19 @@ function Messenger() {
   };
 
   this.publishState = (message) => {
-    const { channel, data } = message;
-    if (_.isNil(channel)) {
+    if (!hasOwnProperty(message, 'channel')) {
       throw new InvalidArgumentError('"message.channel" is required');
     }
-    if (_.isNil(data)) {
+    if (!hasOwnProperty(message, 'data')) {
       throw new InvalidArgumentError('"message.data" is required');
     }
 
     const mes = {
-      channel,
-      data,
+      channel: message.channel,
       topic: 'state',
+      data: message.data,
     };
-    states[channel] = mes;
+    states[message.channel] = mes;
     this.publish(mes);
   };
 }

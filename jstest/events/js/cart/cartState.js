@@ -31,6 +31,7 @@ function CartState() {
           self.removeAll(message.data);
           break;
         default:
+          break;
       }
     });
   };
