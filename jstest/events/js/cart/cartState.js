@@ -1,32 +1,45 @@
-import objLocalStorage from './objLocalStorage.js';
-import messenger from './messenger.js';
+import _ from '../shared/lodash.js';
+import jsonLocalStorage from '../shared/jsonLocalStorage.js';
+import messenger from '../shared/messenger.js';
 
-function CartState(messenger, _) {
-  const cartChannel = 'cart';
+function CartState() {
+  const channel = 'cart';
   const self = this;
-  const store = objLocalStorage(cartChannel, []);
+  const store = jsonLocalStorage(channel, []);
   const items = store.getItem();
 
-  const init = function () {
+  const init = () => {
     self.publishState();
 
-    messenger.subscribe(cartChannel, (topic, data) => {
-      switch (topic) {
+    messenger.subscribe({
+      channel
+    }, (message) => {
+      if (_.isNil(message.topic) || _.isNil(message.data)) {
+        return;
+      }
+      switch (message.topic) {
+        case 'addFirstRemoveAll':
+          return self.addFirstRemoveAll(message.data);
         case 'addOne':
-          return self.addOne(data);
+          return self.addOne(message.data);
         case 'removeOne':
-          return self.removeOne(data);
+          return self.removeOne(message.data);
         case 'removeAll':
-          return self.removeAll(data);
+          return self.removeAll(message.data);
+        default:
+          return;
       }
     });
   };
 
-  this.publishState = function () {
-    messenger.publishState(cartChannel, items);
+  this.publishState = () => {
+    messenger.publishState({
+      channel,
+      data: items,
+    });
   };
 
-  this.addOne = function (data) {
+  this.addOne = (data) => {
     const item = _.find(items, { id: data.id }, 0);
     if (_.isNil(item)) {
       items.push({
@@ -46,7 +59,7 @@ function CartState(messenger, _) {
     this.publishState();
   };
 
-  this.removeOne = function (data) {
+  this.removeOne = (data) => {
     const item = _.find(items, { id: data.id }, 0);
     if (_.isNil(item)) {
       return;
@@ -62,15 +75,24 @@ function CartState(messenger, _) {
     this.publishState();
   };
 
-  this.removeAll = function (data) {
+  this.removeAll = (data) => {
     _.remove(items, (v) => v.id === data.id);
     store.setItem(items);
     this.publishState();
   };
 
+  this.addFirstRemoveAll = (data) => {
+    const item = _.find(items, data, 0);
+    if (_.isObject(item)) {
+      this.removeAll(data);
+    } else {
+      this.addOne(data);
+    }
+  };
+
   init();
 }
 
-(function (messenger, _) {
-  new CartState(messenger, _);
-}(messenger, window._));
+(function init() {
+  new CartState();
+}());

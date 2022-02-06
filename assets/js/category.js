@@ -1,6 +1,7 @@
 import { h, Component, render } from 'https://unpkg.com/preact?module';
+import { AddToCart } from './preact/AddToCart.js'
 
-// Create your app
-const app = h('h1', null, 'Hello World!');
+// const app = h(AddToCart, null, 'Title');
 
-render(app, document.body);
+render(h(AddToCart), document.getElementsByName('add-to-cart'));
+// render(link, document.body);

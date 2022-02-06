@@ -108,5 +108,6 @@ func NewCategoriesLayout(model ICategoriesLayoutData, view html.IView) *html.Lay
 				view,
 			),
 		),
+		e.Script(a.Type("module"), a.Src("/assets/js/category.js")),
 	))
 }

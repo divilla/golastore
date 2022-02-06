@@ -1,10 +1,159 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <title>$Title$</title>
+    <meta charset="UTF-8">
+    <title>Events</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bulma/0.9.3/css/bulma.css" integrity="sha512-7VGuxKU1BFMmA+dC7NiW8jF0YOIe6bibjUBr42unVtEsI/UYzXMS3nkgNvmsY4yqauxeiEs4bXF6fPLsCuxN/A==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/lodash.js/4.17.21/lodash.js" integrity="sha512-2iwCHjuj+PmdCyvb88rMOch0UcKQxVHi/gsAml1fN3eg82IDaO/cdzzeXX4iF2VzIIes7pODE1/G0ts3QBwslA==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.js" integrity="sha512-n/4gHW3atM3QqRcbCn6ewmpxcLAHGaDjpEBu4xZd47N0W2oQ+6q7oc3PXstrJYXcbNU1OHdQ1T7pAP+gi5Yu8g==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/cash/8.1.0/cash.js" integrity="sha512-0tX6VTz8p1mRpaCn/5CHt07BgtRxm+AxSYphTU7gxtXi+zvuIUxb0w+LiLRH1l7EfFVcOKqqV/7UXM6l2bJtIQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/umbrella/0.0.0/umbrella.esm.js" integrity="sha512-e0GrJi1+rX5NI3XF7Gf9mTlRDtB7tZoOnvI9TmdDyzIMSp7JImKZJMyOO0B0hmDs93BiyVyU1HVuV/h8UI5ESg==" crossorigin="anonymous" referrerpolicy="no-referrer" type="module"></script>
+    <script src="js/cart/cartState.js" type="module"></script>
+    <script src="js/cart/index.js" type="module"></script>
+    <script src="js/wishlist/wishlistState.js" type="module"></script>
+    <script src="js/wishlist/index.js" type="module"></script>
+    <script src="js/all/index.js" type="module"></script>
 </head>
 <body>
-$END$
+<nav class="navbar" role="navigation" aria-label="main navigation">
+    <div class="navbar-brand">
+        <a class="navbar-item" href="https://bulma.io">
+            <img src="https://bulma.io/images/bulma-logo.png" width="112" height="28">
+        </a>
+
+        <a role="button" class="navbar-burger" aria-label="menu" aria-expanded="false" data-target="navbarBasicExample">
+            <span aria-hidden="true"></span>
+            <span aria-hidden="true"></span>
+            <span aria-hidden="true"></span>
+        </a>
+    </div>
+
+    <div id="navbarBasicExample" class="navbar-menu">
+        <div class="navbar-start">
+            <a class="navbar-item">
+                Home
+            </a>
+
+            <a class="navbar-item">
+                Documentation
+            </a>
+
+            <div class="navbar-item has-dropdown is-hoverable">
+                <a class="navbar-link">
+                    More
+                </a>
+
+                <div class="navbar-dropdown">
+                    <a class="navbar-item">
+                        About
+                    </a>
+                    <a class="navbar-item">
+                        Jobs
+                    </a>
+                    <a class="navbar-item">
+                        Contact
+                    </a>
+                    <hr class="navbar-divider">
+                    <a class="navbar-item">
+                        Report an issue
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <div class="navbar-end">
+            <div class="navbar-item">
+                <div class="buttons">
+                    <a class="button is-primary">
+                        <strong>Sign up</strong>
+                    </a>
+                    <a class="button is-light">
+                        Log in
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</nav>
+
+<div class="container is-fullhd">
+    <div class="notification is-primary">
+        This container is <strong>fullwidth</strong> <em>until</em> the <code>$fullhd</code> breakpoint.
+    </div>
+</div>
+
+<section class="section">
+    <h1 class="title">Section</h1>
+    <h2 class="subtitle">
+        A simple container to divide your page into <strong>sections</strong>, like the one you're currently reading.
+    </h2>
+</section>
+
+<section>
+    <nav class="level is-mobile">
+        <div class="level-item has-text-centered">
+            <div>
+                <p class="heading">Tweets</p>
+                <p class="title">3,456</p>
+            </div>
+        </div>
+        <div class="level-item has-text-centered">
+            <table class="table-center" style="width: 100%">
+                <tbody><tr>
+                    <td class="text-align: left">
+                        <p class="buttons">
+                            <button class="button is-small" data-publisher data-on="click" data-channel="cart" data-topic="addFirstRemoveAll" data-data='{"id": 123456, "name": "Product Name", "price": 1234.56}'>
+                              <span data-subscriber="inCart" data-channel="cart" data-topic="state" data-filter='{"id": 123456}'>A</span>
+                            </button>
+                        </p>
+                    </td>
+                    <td>
+                        <div class="field has-addons" data-subscriber="addRemoveQuantity" data-channel="cart" data-topic="state" data-filter='{"id": 123456}'>
+                            <p class="control">
+                                <button class="button is-small" data-publisher data-on="click" data-channel="cart" data-topic="removeOne" data-data='{"id": 123456, "name": "Product Name", "price": 1234.56}'>
+                                    <span>-</span>
+                                </button>
+                            </p>
+                            <p class="control">
+                                <button class="button is-small" disabled>
+                                    <span data-subscriber="quantity" data-channel="cart" data-topic="state" data-filter='{"id": 123456}'>0</span>
+                                </button>
+                            </p>
+                            <p class="control">
+                                <button class="button is-small" data-publisher data-on="click" data-channel="cart" data-topic="addOne" data-data='{"id": 123456, "name": "Product Name", "price": 1234.56}'>
+                                    <span>+</span>
+                                </button>
+                            </p>
+                        </div>
+                    </td>
+                    <td class="text-align: right">
+                        <p class="buttons">
+                            <button class="button is-small" data-publisher data-on="click" data-channel="wishlist" data-topic="addToRemoveFrom" data-data='{"id": 123456, "name": "Product Name", "price": 1234.56}'>
+                                <span data-subscriber="inWishlist" data-channel="wishlist" data-topic="state" data-filter='{"id": 123456}'>W</span>
+                            </button>
+                        </p>
+                    </td>
+                    <td>
+                        <span data-subscriber="totalItems" data-channel="cart" data-topic="state">0</span>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+        <div class="level-item has-text-centered">
+            <div>
+                <p class="heading">Followers</p>
+                <p class="title">456K</p>
+            </div>
+        </div>
+        <div class="level-item has-text-centered">
+            <div>
+                <p class="heading">Likes</p>
+                <p class="title">789</p>
+            </div>
+        </div>
+    </nav>
+</section>
+
 </body>
 </html>

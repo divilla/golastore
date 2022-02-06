@@ -1,9 +1,21 @@
 {
-  "name": "events",
+  "name": "htmler",
   "version": "1.0.0",
-  "main": "index.js",
+  "main": "js/cart/index.js",
   "license": "MIT",
-  "dependencies": {
-    "jquery": "^3.6.0"
+  "dependencies": {},
+  "devDependencies": {
+    "eslint": "^8.8.0",
+    "eslint-config-airbnb-base": "^15.0.0",
+    "eslint-plugin-compat": "^4.0.2",
+    "eslint-plugin-import": "^2.25.4"
+  },
+  "browserslist": [
+    "defaults"
+  ],
+  "scripts": {
+    "lint": "npx eslint js/**; exit 0",
+    "lint-fix": "npx eslint --fix js/**; exit 0",
+    "test": "yarn lint"
   }
 }

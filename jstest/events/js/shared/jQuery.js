@@ -1,3 +1,3 @@
-const { _ } = window;
+const $ = window.jQuery;
 
-export default _;
+export default $;

@@ -1,13 +1,15 @@
-function ObjLocalStorage(_, key, initData) {
-  this.getItem = function () {
+import _ from './lodash.js';
+
+function JSONLocalStorage(key, initData) {
+  this.getItem = function getItem() {
     return JSON.parse(localStorage.getItem(key));
   };
 
-  this.setItem = function (val) {
+  this.setItem = function setItem(val) {
     localStorage.setItem(key, JSON.stringify(val));
   };
 
-  this.removeItem = function () {
+  this.removeItem = function removeItem() {
     localStorage.removeItem(key);
   };
 
@@ -18,8 +20,8 @@ function ObjLocalStorage(_, key, initData) {
   }
 }
 
-const objLocalStorage = function (key, initVal) {
-  return new ObjLocalStorage(window._, key, initVal);
+const jsonLocalStorage = function jsonLocalStorage(key, initVal) {
+  return new JSONLocalStorage(key, initVal);
 };
 
-export default objLocalStorage;
+export default jsonLocalStorage;

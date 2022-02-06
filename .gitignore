@@ -16,5 +16,6 @@
 .idea
 cmd/build
 node_modules
+jstest/events/node_modules
 
 data/postgresql/data

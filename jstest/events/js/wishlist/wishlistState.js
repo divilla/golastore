@@ -2,8 +2,8 @@ import _ from '../shared/lodash.js';
 import jsonLocalStorage from '../shared/jsonLocalStorage.js';
 import messenger from '../shared/messenger.js';
 
-function WishListState() {
-  const channel = 'cart';
+function WishlistState() {
+  const channel = 'wishlist';
   const self = this;
   const store = jsonLocalStorage(channel, []);
   const items = store.getItem();
@@ -18,14 +18,8 @@ function WishListState() {
         return;
       }
       switch (message.topic) {
-        case 'addFirstRemoveAll':
-          return self.addFirstRemoveAll(message.data);
-        case 'addOne':
-          return self.addOne(message.data);
-        case 'removeOne':
-          return self.removeOne(message.data);
-        case 'removeAll':
-          return self.removeAll(message.data);
+        case 'addToRemoveFrom':
+          return self.addToRemoveFrom(message.data);
         default:
           return;
       }
@@ -39,60 +33,22 @@ function WishListState() {
     });
   };
 
-  this.addOne = (data) => {
+  this.addToRemoveFrom = (data) => {
     const item = _.find(items, { id: data.id }, 0);
     if (_.isNil(item)) {
-      items.push({
-        id: data.id,
-        name: data.name,
-        price: data.price,
-        quantity: 1,
-        total: data.price,
-      });
+      items.push(data);
     } else {
-      item.name = data.name;
-      item.price = data.price;
-      item.quantity += 1;
-      item.total = _.round(item.price * item.quantity, 2);
+      _.remove(items, (v) => v.id === data.id);
     }
+
     store.setItem(items);
     this.publishState();
-  };
-
-  this.removeOne = (data) => {
-    const item = _.find(items, { id: data.id }, 0);
-    if (_.isNil(item)) {
-      return;
-    }
-
-    if (item.quantity < 2) {
-      this.removeAll(data);
-      return;
-    }
-
-    item.quantity--;
-    store.setItem(items);
-    this.publishState();
-  };
-
-  this.removeAll = (data) => {
-    _.remove(items, (v) => v.id === data.id);
-    store.setItem(items);
-    this.publishState();
-  };
-
-  this.addFirstRemoveAll = (data) => {
-    const item = _.find(items, data, 0);
-    if (_.isObject(item)) {
-      this.removeAll(data);
-    } else {
-      this.addOne(data);
-    }
+    return item;
   };
 
   init();
 }
 
 (function init() {
-  new WishListState();
+  new WishlistState();
 }());

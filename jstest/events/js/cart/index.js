@@ -1,30 +1,58 @@
-import _ from './js/lodash.js'
-import messenger from "./js/messenger.js";
+import $ from '../shared/umbrella.js';
+import _ from '../shared/lodash.js';
+import messenger from '../shared/messenger.js';
 
-$(document).find('[data-publisher]').each(function () {
-  const pub = $(this);
-  pub.on(pub.data("publisher"), function () {
-    messenger.publish(pub.data('channel'), pub.data('topic'), pub.data());
+$(document).find('span[data-subscriber="inCart"]').each((elm) => {
+  const $elm = $(elm);
+  messenger.subscribeToState({
+    channel: $elm.data('channel'),
+  }, (message) => {
+    const item = _.find(message.data, JSON.parse($elm.data('filter')), 0)
+    if (_.isObject(item)) {
+      $elm.html(`Remove all`);
+    } else {
+      $elm.html(`Add to cart`);
+    }
   });
 });
 
-$(document).find('button[data-subscriber]').each(function () {
-  const sub = $(this);
-  messenger.subscribeToState(sub.data('channel'), function (topic, data) {
-    if (topic !== 'state') {
-      return undefined;
+$(document).find('div[data-subscriber="addRemoveQuantity"]').each((elm) => {
+  const $elm = $(elm);
+  messenger.subscribeToState({
+    channel: $elm.data('channel'),
+  }, (message) => {
+    const item = _.find(message.data, JSON.parse($elm.data('filter')), 0)
+    if (_.isObject(item)) {
+      $elm.attr('style', '');
+    } else {
+      $elm.attr('style', 'display: none');
     }
+  });
+});
 
-    let quantity = 0
-    const item = _.find(data, {'id': sub.data('id')}, 0);
-    if (!_.isNil(item)) {
-      quantity = item.quantity
+$(document).find('span[data-subscriber="quantity"]').each((elm) => {
+  const $elm = $(elm);
+  messenger.subscribeToState({
+    channel: $elm.data('channel'),
+  }, (message) => {
+    let quantity = 0;
+    const item = _.find(message.data, JSON.parse($elm.data('filter')), 0)
+    if (_.isObject(item)) {
+      quantity = item.quantity;
     }
-    sub.html(`<span>${quantity}</span>`);
+    $elm.html(quantity);
+  });
+});
 
-    if (quantity < 1) {
-      // sub.closest('.field.has-addons').hide();
+$(document).find('span[data-subscriber="totalItems"]').each((elm) => {
+  const $elm = $(elm);
+  messenger.subscribeToState({
+    channel: $elm.data('channel'),
+  }, (message) => {
+    let total = 0;
+    if (_.isArray(message.data)) {
+      total = message.data.length;
     }
-    return sub;
-  }) ;
+    $elm.html(total);
+  });
 });
