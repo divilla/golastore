@@ -7,11 +7,11 @@ $(document).find('span[data-subscriber="inWishlist"]').each((elm) => {
   messenger.subscribeToState({
     channel: $elm.data('channel'),
   }, (message) => {
-    const item = _.find(message.data, JSON.parse($elm.data('filter')), 0)
+    const item = _.find(message.data, JSON.parse($elm.data('filter')), 0);
     if (_.isObject(item)) {
-      $elm.html(`Remove from wishlist`);
+      $elm.html('Remove from wishlist');
     } else {
-      $elm.html(`Add to wishlist`);
+      $elm.html('Add to wishlist');
     }
   });
 });

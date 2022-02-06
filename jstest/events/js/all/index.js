@@ -9,7 +9,7 @@ $(document).find('[data-publisher]').each((elm) => {
     data: JSON.parse($elm.data('data')),
   };
 
-  $elm.on($elm.data('on'),  () => {
+  $elm.on($elm.data('on'), () => {
     messenger.publish(message);
   });
 });

@@ -1,4 +1,5 @@
 import _ from './lodash.js';
+import { InvalidArgumentError } from './errors.js';
 
 function Messenger() {
   const subscriptions = [];
@@ -9,16 +10,13 @@ function Messenger() {
     if (_.isFunction(handler)) {
       sub.handler = handler;
     } else {
-      throw 'handler argument is not valid callback function';
+      throw new InvalidArgumentError('"handler" is not valid callback function');
     }
 
     if (!_.isObject(to)) {
-      throw 'to argument is not valid object';
+      throw new InvalidArgumentError('"to" is not valid object');
     }
 
-    if (!_.isNil(to.channel) && !_.isNil(to.topic) && to.topic === 'state' && !_.isNil(states[to.channel])) {
-      handler(states[to.channel]);
-    }
     if (!_.isNil(to.channel)) {
       sub.channel = to.channel;
     }
@@ -29,20 +27,25 @@ function Messenger() {
     subscriptions.push(sub);
   };
 
-  this.subscribeToState = function subscribeToState (to, handler) {
+  this.subscribeToState = function subscribeToState(to, handler) {
     if (!_.isObject(to)) {
-      throw 'to argument is not valid object';
+      throw new InvalidArgumentError('"to" is not valid object');
     }
     if (_.isNil(to.channel)) {
-      throw 'to.channel argument is required in subscribeToState';
+      throw new InvalidArgumentError('"to.channel" is required');
     }
-    to.topic = 'state';
+    if (!_.isNil(states[to.channel])) {
+      handler(states[to.channel]);
+    }
 
-    this.subscribe(to, handler);
-  }
+    this.subscribe({
+      channel: to.channel,
+      topic: 'state',
+    }, handler);
+  };
 
-  this.publish = function publish (message) {
-    for (let i=0; i<subscriptions.length; i++) {
+  this.publish = function publish(message) {
+    for (let i = 0; i < subscriptions.length; i++) {
       const sub = subscriptions[i];
       if (sub.channel !== undefined && sub.channel !== message.channel) {
         continue;
@@ -56,16 +59,21 @@ function Messenger() {
   };
 
   this.publishState = (message) => {
-    if (_.isNil(message.channel)) {
-      throw 'message.channel argument is required in publishState';
+    const { channel, data } = message;
+    if (_.isNil(channel)) {
+      throw new InvalidArgumentError('"message.channel" is required');
     }
-    if (_.isNil(message.data)) {
-      throw 'message.data argument is required in publishState';
+    if (_.isNil(data)) {
+      throw new InvalidArgumentError('"message.data" is required');
     }
-    message.topic = 'state';
-    states[message.channel] = message;
 
-    this.publish(message);
+    const mes = {
+      channel,
+      data,
+      topic: 'state',
+    };
+    states[channel] = mes;
+    this.publish(mes);
   };
 }
 

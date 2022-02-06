@@ -7,11 +7,11 @@ $(document).find('span[data-subscriber="inCart"]').each((elm) => {
   messenger.subscribeToState({
     channel: $elm.data('channel'),
   }, (message) => {
-    const item = _.find(message.data, JSON.parse($elm.data('filter')), 0)
+    const item = _.find(message.data, JSON.parse($elm.data('filter')), 0);
     if (_.isObject(item)) {
-      $elm.html(`Remove all`);
+      $elm.html('Remove all');
     } else {
-      $elm.html(`Add to cart`);
+      $elm.html('Add to cart');
     }
   });
 });
@@ -21,7 +21,7 @@ $(document).find('div[data-subscriber="addRemoveQuantity"]').each((elm) => {
   messenger.subscribeToState({
     channel: $elm.data('channel'),
   }, (message) => {
-    const item = _.find(message.data, JSON.parse($elm.data('filter')), 0)
+    const item = _.find(message.data, JSON.parse($elm.data('filter')), 0);
     if (_.isObject(item)) {
       $elm.attr('style', '');
     } else {
@@ -36,7 +36,7 @@ $(document).find('span[data-subscriber="quantity"]').each((elm) => {
     channel: $elm.data('channel'),
   }, (message) => {
     let quantity = 0;
-    const item = _.find(message.data, JSON.parse($elm.data('filter')), 0)
+    const item = _.find(message.data, JSON.parse($elm.data('filter')), 0);
     if (_.isObject(item)) {
       quantity = item.quantity;
     }

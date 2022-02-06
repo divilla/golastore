@@ -12,16 +12,16 @@ function WishlistState() {
     self.publishState();
 
     messenger.subscribe({
-      channel
+      channel,
     }, (message) => {
       if (_.isNil(message.topic) || _.isNil(message.data)) {
-        return;
+        return undefined;
       }
       switch (message.topic) {
         case 'addToRemoveFrom':
           return self.addToRemoveFrom(message.data);
         default:
-          return;
+          return undefined;
       }
     });
   };

@@ -12,22 +12,25 @@ function CartState() {
     self.publishState();
 
     messenger.subscribe({
-      channel
+      channel,
     }, (message) => {
       if (_.isNil(message.topic) || _.isNil(message.data)) {
         return;
       }
       switch (message.topic) {
         case 'addFirstRemoveAll':
-          return self.addFirstRemoveAll(message.data);
+          self.addFirstRemoveAll(message.data);
+          break;
         case 'addOne':
-          return self.addOne(message.data);
+          self.addOne(message.data);
+          break;
         case 'removeOne':
-          return self.removeOne(message.data);
+          self.removeOne(message.data);
+          break;
         case 'removeAll':
-          return self.removeAll(message.data);
+          self.removeAll(message.data);
+          break;
         default:
-          return;
       }
     });
   };
