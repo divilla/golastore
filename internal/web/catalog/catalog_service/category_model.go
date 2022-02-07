@@ -1,24 +1,22 @@
 package catalog_service
 
-import "github.com/divilla/golastore/internal/domain"
+import (
+	"github.com/divilla/golastore/internal/domain_model"
+	"github.com/divilla/golastore/internal/view_model"
+)
 
 type (
 	CategoryDTO struct {
-		Search       string `param:"search"`
-		CategorySlug string `param:"category"`
-		Page         int64  `param:"page"`
+		Search   string `param:"search"`
+		Category string `param:"category"`
+		Page     int64  `param:"page"`
 	}
 
 	CategoryModel struct {
-		title            string
-		selectedSlug     string
-		selectedCategory *domain.TaxonomyItem
-		listedCategory   *domain.TaxonomyItem
-		currentPage      int64
-		productsPerPage  int64
-		totalProducts    int64
-		totalPages       int64
-		productsList     []*domain.ListProduct
+		title      string
+		Category   *view_model.CategoryVM
+		Pagination *view_model.PaginationVM
+		Products   []*domain_model.ListProduct
 	}
 )
 
@@ -26,34 +24,14 @@ func (m *CategoryModel) Title() string {
 	return m.title
 }
 
-func (m *CategoryModel) SelectedSlug() string {
-	return m.selectedSlug
+func (m *CategoryModel) CategorySlug() string {
+	return m.Category.CurrentCategorySlug
 }
 
-func (m *CategoryModel) SelectedCategory() *domain.TaxonomyItem {
-	return m.selectedCategory
+func (m *CategoryModel) CurrentCategory() *domain_model.TaxonomyItem {
+	return m.Category.CurrentCategory
 }
 
-func (m *CategoryModel) ListedCategory() *domain.TaxonomyItem {
-	return m.listedCategory
-}
-
-func (m *CategoryModel) CurrentPage() int64 {
-	return m.currentPage
-}
-
-func (m *CategoryModel) ItemsPerPage() int64 {
-	return m.productsPerPage
-}
-
-func (m *CategoryModel) TotalPages() int64 {
-	return m.totalPages
-}
-
-func (m *CategoryModel) TotalItems() int64 {
-	return m.totalProducts
-}
-
-func (m *CategoryModel) ProductsList() []*domain.ListProduct {
-	return m.productsList
+func (m *CategoryModel) ListedCategory() *domain_model.TaxonomyItem {
+	return m.Category.ListedCategory
 }

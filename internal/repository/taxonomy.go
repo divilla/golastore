@@ -2,7 +2,7 @@ package repository
 
 import (
 	"context"
-	"github.com/divilla/golastore/internal/domain"
+	"github.com/divilla/golastore/internal/domain_model"
 	"github.com/divilla/golastore/pkg/postgres"
 )
 
@@ -18,7 +18,7 @@ func NewTaxonomyRepository(pool *postgres.Pool) *Taxonomy {
 	}
 }
 
-func (r *Taxonomy) All(ctx context.Context) ([]*domain.TaxonomyItem, error) {
+func (r *Taxonomy) All(ctx context.Context) ([]*domain_model.TaxonomyItem, error) {
 	conn, err := r.pool.Acquire(ctx)
 	if err != nil {
 		return nil, err
@@ -32,22 +32,20 @@ func (r *Taxonomy) All(ctx context.Context) ([]*domain.TaxonomyItem, error) {
 			slug,
 			root,
 			properties,
-			path,
-			position,
 			parent_id,
-			parent_slug
-		from taxonomy_item_view
-		where root or path is not null;
+			parent_slug,
+			position
+		from taxonomy_item_details;
 	`)
 	if err != nil {
 		return nil, err
 	}
 	defer rows.Close()
 
-	var tis []*domain.TaxonomyItem
+	var tis []*domain_model.TaxonomyItem
 	for rows.Next() {
-		var ti domain.TaxonomyItem
-		if err = rows.Scan(&ti.Id, &ti.Name, &ti.Slug, &ti.Root, &ti.Properties, &ti.Path, &ti.Position, &ti.ParentId, &ti.ParentSlug); err != nil {
+		var ti domain_model.TaxonomyItem
+		if err = rows.Scan(&ti.Id, &ti.Name, &ti.Slug, &ti.Root, &ti.Properties, &ti.ParentId, &ti.ParentSlug, &ti.Position); err != nil {
 			return nil, err
 		}
 		tis = append(tis, &ti)

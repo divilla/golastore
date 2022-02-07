@@ -231,3 +231,31 @@ a.two-lines-text {
 a.two-lines-text:hover {
     color: $link;
 }
+
+.pagination-previous, .pagination-next, .pagination-link {
+    border-color: #ffffff;
+    min-width: 2.5em;
+    max-width: 2.5em;
+    max-height: 2.5em;
+}
+
+.pagination-previous:hover, .pagination-next:hover, .pagination-link:hover {
+    border: 1px solid #cccccc;
+    color: #000000;
+}
+
+.pagination-link span.mdi {
+    font-size: 1.5rem;
+}
+
+.pagination-link.is-disabled, .pagination-link[disabled], .pagination-next.is-disabled, .pagination-next[disabled], .pagination-previous.is-disabled, .pagination-previous[disabled] {
+    border-color: #dbdbdb;
+    box-shadow: none;
+    color: #7a7a7a;
+    opacity: .5;
+}
+
+a.is-disabled:hover,
+button.is-disabled:hover {
+    cursor:not-allowed;
+}

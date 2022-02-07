@@ -56,6 +56,10 @@ func Rel(val string) A {
 	return Attr("rel", val)
 }
 
+func RefererPolicy(val string) A {
+	return Attr("refererpolicy", val)
+}
+
 func Role(val string) A {
 	return Attr("role", val)
 }

@@ -1,10 +1,11 @@
-package domain
+package domain_model
 
 import (
 	"github.com/google/uuid"
 	"github.com/jackc/pgtype"
 	"golang.org/x/text/language"
 	"golang.org/x/text/message"
+	"strings"
 )
 
 type (
@@ -14,16 +15,12 @@ type (
 		Slug       string
 		Root       bool
 		Properties TaxonomyProperties
-		Path       []*TaxonomyPathItem
-		Position   pgtype.Int8
 		ParentId   pgtype.UUID
 		ParentSlug pgtype.Text
+		Position   pgtype.Int8
+		Parent     *TaxonomyItem
+		Path       []*TaxonomyItem
 		Children   []*TaxonomyItem
-	}
-
-	TaxonomyPathItem struct {
-		Slug string `json:"slug"`
-		Name string `json:"name"`
 	}
 
 	TaxonomyProperties struct {
@@ -31,7 +28,11 @@ type (
 	}
 )
 
+func (t *TaxonomyItem) ShortId() string {
+	return strings.ReplaceAll(t.Id.String(), "-", "")
+}
+
 func (t *TaxonomyItem) TotalProducts() string {
-	p := message.NewPrinter(language.BritishEnglish)
+	p := message.NewPrinter(language.German)
 	return p.Sprintf("%d", t.Properties.TotalProducts)
 }

@@ -1,7 +1,7 @@
 package layouts
 
 import (
-	"github.com/divilla/golastore/internal/domain"
+	"github.com/divilla/golastore/internal/domain_model"
 	"github.com/divilla/golastore/pkg/html"
 	"github.com/divilla/golastore/pkg/html/a"
 	"github.com/divilla/golastore/pkg/html/d"
@@ -12,7 +12,7 @@ import (
 type (
 	IMainLayoutData interface {
 		Title() string
-		ListedCategory() *domain.TaxonomyItem
+		ListedCategory() *domain_model.TaxonomyItem
 	}
 )
 
@@ -26,7 +26,7 @@ func NewMainLayout(data IMainLayoutData, view html.IView) *html.Layout {
 				e.Meta(a.A{K: "charset", V: "utf-8"}),
 				e.Meta(a.A{K: "name", V: "viewport"}, a.A{K: "content", V: "width=device-width, initial-scale=1"}),
 				e.Title().Text(data.Title()),
-				e.Link(a.Rel("stylesheet"), a.Href("https://fonts.googleapis.com/icon?family=Material+Icons")),
+				e.Link(a.Rel("stylesheet"), a.Href("https://cdnjs.cloudflare.com/ajax/libs/MaterialDesign-Webfont/6.5.95/css/materialdesignicons.css"), a.Integrity("sha512-x6bCTnc3rzkrdNmyFuJBWwOF23tzxLalBSQ2N3BEYKLWOpjfpYpnBrE0wlRHI/j4Oyv72/VuAewe2DmEl/NXdA=="), a.CrossOrigin("anonymous"), a.RefererPolicy("no-referrer")),
 				e.Link(a.Rel("stylesheet"), a.Href("/assets/css/style.css?id="+rnd)),
 			),
 			e.Body().Children(

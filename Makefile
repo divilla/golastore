@@ -96,14 +96,14 @@ db-remove: ## stop the database server
 
 DATETIME=$(shell date +'%Y-%m-%d-%H-%M-%S')
 .PHONY: db-dump
-db-dump:
+db-dump: ## backup database
 	docker exec -i \
 		-e PGPASSWORD=postgres \
 		postgresql \
 		pg_dump -Fc -U postgres -d ekupi -f "/bitnami/postgresql/dump/golastore_$(DATETIME).dump"
 
 .PHONY: db-restore
-db-restore:
+db-restore: ## restore database
 	docker exec -i \
 		-e PGPASSWORD=postgres \
 		postgresql \

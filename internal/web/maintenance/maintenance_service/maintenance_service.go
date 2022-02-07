@@ -102,6 +102,67 @@ func (s *MaintenanceService) rebuildTaxonomySlugsRecursive(ctx context.Context, 
 	return nil
 }
 
+func (s *MaintenanceService) RebuildOtherTaxonomySlugs(ctx context.Context) error {
+	conn, err := s.pool.Acquire(ctx)
+	if err != nil {
+		return err
+	}
+	defer conn.Release()
+
+	connExec, err := s.pool.Acquire(ctx)
+	if err != nil {
+		return err
+	}
+	defer connExec.Release()
+
+	rows, err := conn.Query(ctx, `
+		select id, name
+		from taxonomy_item ti
+		where slug is null or slug = '';
+	`)
+	if err != nil {
+		return err
+	}
+	defer rows.Close()
+
+	regWord := regexp.MustCompile(`[^\w]`)
+	regSpace := regexp.MustCompile(`\s+`)
+	for rows.Next() {
+		var id uuid.UUID
+		var name string
+		err = rows.Scan(&id, &name)
+		if err != nil {
+			return err
+		}
+
+		slug := strings.ToLower(name)
+		slug = strings.ReplaceAll(slug, "č", "c")
+		slug = strings.ReplaceAll(slug, "ć", "c")
+		slug = strings.ReplaceAll(slug, "đ", "d")
+		slug = strings.ReplaceAll(slug, "š", "s")
+		slug = strings.ReplaceAll(slug, "ž", "z")
+
+		slug = regWord.ReplaceAllString(slug, " ")
+		slug = regSpace.ReplaceAllString(slug, " ")
+		slug = strcase.ToKebab(slug)
+
+		_, err = connExec.Exec(ctx, "update taxonomy_item set slug=$1 where id=$2", slug, id)
+		if err != nil {
+			for i := 1; i < 30; i++ {
+				_, err = connExec.Exec(ctx, "update taxonomy_item set slug=$1 where id=$2", slug+"-"+strconv.Itoa(i), id)
+				if err == nil {
+					break
+				}
+			}
+			if err != nil {
+				return err
+			}
+		}
+	}
+
+	return nil
+}
+
 func (s *MaintenanceService) RebuildTaxonomyParents(ctx context.Context) error {
 	conn, err := s.pool.Acquire(ctx)
 	if err != nil {

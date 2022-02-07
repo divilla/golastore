@@ -2,7 +2,7 @@ package layouts
 
 import (
 	"fmt"
-	"github.com/divilla/golastore/internal/domain"
+	"github.com/divilla/golastore/internal/domain_model"
 	"github.com/divilla/golastore/pkg/html"
 	"github.com/divilla/golastore/pkg/html/a"
 	"github.com/divilla/golastore/pkg/html/d"
@@ -12,9 +12,9 @@ import (
 type (
 	ICategoriesLayoutData interface {
 		Title() string
-		SelectedSlug() string
-		SelectedCategory() *domain.TaxonomyItem
-		ListedCategory() *domain.TaxonomyItem
+		CategorySlug() string
+		CurrentCategory() *domain_model.TaxonomyItem
+		ListedCategory() *domain_model.TaxonomyItem
 	}
 )
 
@@ -22,7 +22,7 @@ func NewCategoriesLayout(model ICategoriesLayoutData, view html.IView) *html.Lay
 	var path []html.Renderer
 	var children []html.Renderer
 	cat := model.ListedCategory()
-	slug := model.SelectedSlug()
+	slug := model.CategorySlug()
 	chevronDown := "<i class=\"fas fa-chevron-down\" style=\"margin-right: 6px\"></i> "
 
 	for k, v := range cat.Path {
@@ -31,7 +31,7 @@ func NewCategoriesLayout(model ICategoriesLayoutData, view html.IView) *html.Lay
 		}
 		path = append(path,
 			e.Li().Children(
-				e.A(a.Href("/c/"+v.Slug)).Children(
+				e.A(a.Href("/c/"+v.Slug+"/1")).Children(
 					e.Strong().Text(chevronDown+v.Name),
 				),
 			),
@@ -41,7 +41,7 @@ func NewCategoriesLayout(model ICategoriesLayoutData, view html.IView) *html.Lay
 	for _, v := range cat.Children {
 		children = append(children,
 			e.Li().Children(
-				e.A(a.Href("/c/"+v.Slug), a.Class(d.Ifs(v.Slug == slug, "is-active").String())).
+				e.A(a.Href("/c/"+v.Slug+"/1"), a.Class(d.Ifs(v.Slug == slug, "is-active").String())).
 					Text(fmt.Sprintf("%s (%s)", v.Name, v.TotalProducts())),
 			),
 		)
@@ -50,7 +50,7 @@ func NewCategoriesLayout(model ICategoriesLayoutData, view html.IView) *html.Lay
 	if cat.Slug != slug {
 		path = append(path,
 			e.Li().Children(
-				e.A(a.Href("/c/"+slug)).
+				e.A(a.Href("/c/"+slug+"/1")).
 					Text(chevronDown+cat.Name),
 			),
 			e.Li().Children(
@@ -62,7 +62,7 @@ func NewCategoriesLayout(model ICategoriesLayoutData, view html.IView) *html.Lay
 	} else {
 		path = append(path,
 			e.Li().Children(
-				e.A(a.Href("/c/"+slug), a.Class("is-active")).
+				e.A(a.Href("/c/"+slug+"/1"), a.Class("is-active")).
 					Text(chevronDown+cat.Name),
 				e.Ul().Children(
 					children...,
@@ -72,8 +72,8 @@ func NewCategoriesLayout(model ICategoriesLayoutData, view html.IView) *html.Lay
 	}
 
 	var breadcrunbs []html.Renderer
-	l := len(model.SelectedCategory().Path) - 1
-	for key, item := range model.SelectedCategory().Path {
+	l := len(model.CurrentCategory().Path) - 1
+	for key, item := range model.CurrentCategory().Path {
 		if key == l {
 			breadcrunbs = append(breadcrunbs,
 				e.Li(a.Class("is-active")).Children(
