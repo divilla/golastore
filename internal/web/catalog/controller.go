@@ -21,6 +21,7 @@ func NewController(e *echo.Echo, service *catalog_service.CatalogService) {
 
 	e.GET("/", middleware.UseCustomContext(c.index))
 	e.GET("/c/:category", middleware.UseCustomContext(c.category))
+	e.GET("/c/:category/:page", middleware.UseCustomContext(c.category))
 
 	group := e.Group("/catalog")
 	group.GET("/", middleware.UseCustomContext(c.index))

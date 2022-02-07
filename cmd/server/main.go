@@ -17,7 +17,7 @@ func main() {
 
 	e.Use(middleware.CustomContextMiddleware())
 	e.Use(middleware.ZapLoggerMiddleware(c.Logger()))
-	e.Use(middleware.Recover())
+	//e.Use(middleware.Recover())
 	e.Use(middleware.RequestID())
 	e.Static("/assets", "assets")
 	e.Debug = true

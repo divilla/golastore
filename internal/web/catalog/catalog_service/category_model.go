@@ -6,7 +6,7 @@ type (
 	CategoryDTO struct {
 		Search       string `param:"search"`
 		CategorySlug string `param:"category"`
-		Page         int64  `param:"currentPage"`
+		Page         int64  `param:"page"`
 	}
 
 	CategoryModel struct {
@@ -42,7 +42,7 @@ func (m *CategoryModel) CurrentPage() int64 {
 	return m.currentPage
 }
 
-func (m *CategoryModel) ProductsPerPage() int64 {
+func (m *CategoryModel) ItemsPerPage() int64 {
 	return m.productsPerPage
 }
 
@@ -50,7 +50,7 @@ func (m *CategoryModel) TotalPages() int64 {
 	return m.totalPages
 }
 
-func (m *CategoryModel) TotalProducts() int64 {
+func (m *CategoryModel) TotalItems() int64 {
 	return m.totalProducts
 }
 

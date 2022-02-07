@@ -27,7 +27,10 @@ func (r *Product) Search(ctx context.Context, search string, perPage, page int64
 
 	var total int64
 	row := conn.QueryRow(ctx, `
-		select product_fts_count($1) as total
+		select
+			cnt
+		from
+			product_fts_count($1);
 	`, search)
 	if row.Scan(&total) != nil {
 		return nil, 0, total, err

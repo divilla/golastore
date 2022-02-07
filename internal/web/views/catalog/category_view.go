@@ -1,15 +1,41 @@
 package catalog
 
 import (
+	"fmt"
+	"github.com/divilla/golastore/framework/pagination"
 	"github.com/divilla/golastore/internal/web/catalog/catalog_service"
 	"github.com/divilla/golastore/internal/web/views/layouts"
 	"github.com/divilla/golastore/pkg/html"
 	"github.com/divilla/golastore/pkg/html/a"
+	"github.com/divilla/golastore/pkg/html/d"
 	"github.com/divilla/golastore/pkg/html/e"
 )
 
 func NewCategoryView(model *catalog_service.CategoryModel) html.IView {
-	var columns []html.Renderer
+	var links, columns []html.Renderer
+	pages := pagination.New(model.CurrentPage(), model.TotalPages(), 4)
+	if pages.ShowFirstLast() {
+		page, enabled := pages.First()
+		links = append(links, pageLink(model.SelectedSlug(), e.Span(a.Class("material-icons")).Text("first_page"), page, enabled, false))
+	}
+	if pages.ShowPreviousNext() {
+		page, enabled := pages.Previous()
+		links = append(links, pageLink(model.SelectedSlug(), e.Span(a.Class("material-icons")).Text("chevron_left"), page, enabled, false))
+		links = append(links, e.Li().Children(e.Span(a.Class("pagination-ellipsis")).Text("&hellip;")))
+	}
+	for _, page := range pages.Links() {
+		links = append(links, pageLink(model.SelectedSlug(), nil, page, true, pages.IsCurrent(page)))
+	}
+	if pages.ShowPreviousNext() {
+		page, enabled := pages.Next()
+		links = append(links, e.Li().Children(e.Span(a.Class("pagination-ellipsis")).Text("&hellip;")))
+		links = append(links, pageLink(model.SelectedSlug(), e.Span(a.Class("material-icons")).Text("chevron_right"), page, enabled, false))
+	}
+	if pages.ShowFirstLast() {
+		page, enabled := pages.Last()
+		links = append(links, pageLink(model.SelectedSlug(), e.Span(a.Class("material-icons")).Text("last_page"), page, enabled, false))
+	}
+
 	for _, item := range model.ProductsList() {
 		columns = append(columns,
 			e.Div(a.Class("column is-2")).Children(
@@ -112,8 +138,45 @@ func NewCategoryView(model *catalog_service.CategoryModel) html.IView {
 	}
 
 	return layouts.NewCategoriesLayout(model, html.NewView(
+		e.Nav(a.Class("pagination"), a.Role("navigation"), a.AriaLabel("pagination")).Children(
+			e.Ul(a.Class("pagination-list")).Children(
+				links...,
+			),
+		),
 		e.Div(a.Class("columns is-multiline")).Children(
 			columns...,
 		),
 	))
+}
+
+func pageLink(slug string, text html.Renderer, page int64, enabled, current bool) html.Renderer {
+	var label string
+	href := fmt.Sprintf("/c/%s/%d", slug, page)
+	if text == nil {
+		text = d.Block(fmt.Sprintf("%d", page))
+	}
+
+	if current {
+		label = fmt.Sprintf("Page %d", page)
+		return e.Li().Children(
+			e.A(a.Class("pagination-link is-current"), a.AriaLabel(label), a.AriaCurrent("page")).Children(
+				text,
+			),
+		)
+	}
+
+	label = fmt.Sprintf("Goto page %d", page)
+	if enabled {
+		return e.Li().Children(
+			e.A(a.Href(href), a.Class("pagination-link"), a.AriaLabel(label)).Children(
+				text,
+			),
+		)
+	}
+
+	return e.Li().Children(
+		e.A(a.Class("pagination-link"), a.AriaLabel(label)).Children(
+			text,
+		),
+	)
 }
