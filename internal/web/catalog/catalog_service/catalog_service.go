@@ -5,6 +5,13 @@ import (
 	"github.com/divilla/golastore/internal/cache"
 	"github.com/divilla/golastore/internal/repository"
 	"github.com/divilla/golastore/internal/view_model"
+	"strconv"
+)
+
+const (
+	rootProductCategory string = "product-categories-root"
+	itemsPerPageDefault int64  = 30
+	linkSpreadDefault   int64  = 4
 )
 
 type (
@@ -23,28 +30,59 @@ func NewCatalogService(appCache *cache.App, taxCache *cache.Taxonomy, productRep
 	}
 }
 
-func (s *CatalogService) Category(ctx context.Context, dto *CategoryDTO) (*CategoryModel, error) {
+func (s *CatalogService) CategoryProductList(ctx context.Context, dto *CatalogCategoryDTO) (*CatalogCategoryModel, error) {
+	if dto.Page < 1 {
+		dto.Page = 1
+	}
+	if dto.Category == "" {
+		dto.Category = rootProductCategory
+	}
+	if dto.ItemsPerPage == 0 {
+		dto.ItemsPerPage = itemsPerPageDefault
+	}
+
+	categoryURLBuilder := func(slug string) string {
+		return "/c/" + slug + "/1"
+	}
 	category, err := s.taxCache.Get(dto.Category)
 	if err != nil {
 		return nil, err
 	}
-	categoryVM := view_model.NewCategoryVM(category)
+	categoryList := view_model.NewCategoryList(category, categoryURLBuilder)
 
-	totalItems, err := s.productRepo.SearchCount(ctx, categoryVM.CurrentCategory.ShortId())
+	title := s.appCache.Title()
+	if !category.Root {
+		title = category.Name + " - " + title
+	}
+	webPage := view_model.NewWebPage(title, title)
+
+	paginationURLBuilder := func(page int64) string {
+		p := strconv.FormatInt(page, 10)
+		return "/c/" + dto.Category + "/" + p
+	}
+
+	totalItems, err := s.productRepo.SearchCount(ctx, category.ShortId())
 	if err != nil {
 		return nil, err
 	}
-	pagination := view_model.NewPagination(dto.Page, totalItems)
+	pagination := view_model.NewPagination(totalItems, dto.ItemsPerPage, dto.Page, linkSpreadDefault, paginationURLBuilder)
 
-	products, err := s.productRepo.Search(ctx, categoryVM.CurrentCategory.ShortId(), pagination.Limit(), pagination.Offset())
+	breadcrumbs := view_model.NewBreadcrumbsViewModel("Home")
+	for _, cat := range category.Path {
+		breadcrumbs.AddItem("/c/"+cat.Slug+"/1", cat.Name)
+	}
+	breadcrumbs.AddItem("", category.Name)
+
+	products, err := s.productRepo.Search(ctx, category.ShortId(), dto.ItemsPerPage, (dto.Page-1)*dto.ItemsPerPage)
 	if err != nil {
 		return nil, err
 	}
 
-	return &CategoryModel{
-		title:      s.appCache.Title(),
-		Category:   categoryVM,
-		Pagination: pagination,
-		Products:   products,
+	return &CatalogCategoryModel{
+		webPage:      webPage,
+		categoryList: categoryList,
+		breadcrumbs:  breadcrumbs,
+		pagination:   pagination,
+		listProducts: products,
 	}, err
 }

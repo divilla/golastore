@@ -9,8 +9,6 @@ import (
 	"sync"
 )
 
-const rootProductCategory = "product-categories-root"
-
 var TaxNotFoundErr = errors.New("taxonomy item not found")
 
 type (
@@ -37,10 +35,6 @@ func NewTaxonomyCache(r *repository.Taxonomy) *Taxonomy {
 func (c *Taxonomy) Get(key string) (*domain_model.TaxonomyItem, error) {
 	c.rwm.RLock()
 	defer c.rwm.RUnlock()
-
-	if key == "" {
-		key = rootProductCategory
-	}
 
 	if val, ok := c.cache[key]; ok {
 		return val, nil

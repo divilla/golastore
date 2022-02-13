@@ -50,7 +50,7 @@ run-live: ## run the API server with live reload support (requires fswatch)
 
 .PHONY: build
 build:  ## build the API server binary
-	CGO_ENABLED=0 go build ${LDFLAGS} -a -o server $(MODULE)/cmd/server
+	CGO_ENABLED=0 go build ${LDFLAGS} -a -o cmd/build/golastore $(MODULE)/cmd/server
 
 .PHONY: build-docker
 build-docker: ## build the API server as a docker image
@@ -107,7 +107,7 @@ db-restore: ## restore database
 	docker exec -i \
 		-e PGPASSWORD=postgres \
 		postgresql \
-		pg_restore --format=c -U postgres -d ekupi "/bitnami/postgresql/dump/ekupi-2021_12_27_19_44_48-dump.tar.gz"
+		pg_restore --format=c -U postgres -d golastore "/bitnami/postgresql/dump/golastore_2022-02-09-14-05-36.dump"
 
 LOGFILE=$(shell date +'%Y-%m-%d-%H-%M-%S')
 .PHONY: date

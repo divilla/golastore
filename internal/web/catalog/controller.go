@@ -28,26 +28,26 @@ func NewController(e *echo.Echo, service *catalog_service.CatalogService) {
 }
 
 func (c *catalogController) index(ctx *middleware.CustomContext) error {
-	var dto catalog_service.CategoryDTO
+	var dto catalog_service.CatalogCategoryDTO
 	if err := ctx.Bind(&dto); err != nil {
 		return err
 	}
 
-	model, err := c.service.Category(ctx.Request().Context(), &dto)
+	model, err := c.service.CategoryProductList(ctx.Request().Context(), &dto)
 	if err != nil {
 		return err
 	}
 
-	return ctx.RenderView(http.StatusOK, catalog.NewIndexView(model))
+	return ctx.RenderView(http.StatusOK, catalog.NewCategoryView(model))
 }
 
 func (c *catalogController) category(ctx *middleware.CustomContext) error {
-	var dto catalog_service.CategoryDTO
+	var dto catalog_service.CatalogCategoryDTO
 	if err := ctx.Bind(&dto); err != nil {
 		return err
 	}
 
-	model, err := c.service.Category(ctx.Request().Context(), &dto)
+	model, err := c.service.CategoryProductList(ctx.Request().Context(), &dto)
 	if err != nil {
 		return err
 	}

@@ -22,6 +22,10 @@ func Attr(key string, val string) A {
 
 // Render writes attribute to a buffer
 func (a *A) Render(bb *strings.Builder) {
+	if a.K == "" {
+		return
+	}
+
 	bb.WriteString(" ")
 	bb.WriteString(a.K)
 	bb.WriteString(`="`)

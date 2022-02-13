@@ -7,6 +7,6 @@ import (
 	"github.com/divilla/golastore/pkg/html/d"
 )
 
-func NewIndexView(model *catalog_service.CategoryModel) html.IView {
-	return layouts.NewCategoriesLayout(model, html.NewView(d.Block(model.Title())))
+func NewIndexView(model *catalog_service.CatalogCategoryModel) html.IView {
+	return layouts.NewCategoriesLayout(model, html.NewView(d.Block(model.WebPage().MetaTitle)))
 }
