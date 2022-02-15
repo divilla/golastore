@@ -52,9 +52,35 @@ func (c *component) html() *html.Component {
 	}
 
 	return html.NewComponent(
-		e.Nav(a.Class("pagination"), a.Role("navigation"), a.AriaLabel("pagination")).Children(
-			e.Ul(a.Class("pagination-list")).Children(
-				links...,
+		e.Div(a.Class("columns is-multiline")).Children(
+			e.Div(a.Class("column is-full-mobile is-8-widescreen")).Children(
+				e.Nav(a.Class("pagination"), a.Role("navigation"), a.AriaLabel("pagination")).Children(
+					e.Ul(a.Class("pagination-list")).Children(
+						links...,
+					),
+				),
+			),
+			e.Div(a.Class("column is-half-mobile is-2-widescreen")).Children(
+				e.Div(a.Class("select")).Children(
+					e.Select().Children(
+						e.Option(a.Value("default")).Text("Default Sort"),
+						e.Option(a.Value("price-desc")).Text("Price Descending"),
+						e.Option(a.Value("price-asc")).Text("Price Ascending"),
+						e.Option(a.Value("name-desc")).Text("Name Descending"),
+						e.Option(a.Value("name-asc")).Text("Name Ascending"),
+					),
+				),
+			),
+			e.Div(a.Class("column is-half-mobile is-2-widescreen")).Children(
+				e.Div(a.Class("select")).Children(
+					e.Select().Children(
+						e.Option(a.Value("default")).Text("Default Sort"),
+						e.Option(a.Value("price-desc")).Text("Price Descending"),
+						e.Option(a.Value("price-asc")).Text("Price Ascending"),
+						e.Option(a.Value("name-desc")).Text("Name Descending"),
+						e.Option(a.Value("name-asc")).Text("Name Ascending"),
+					),
+				),
 			),
 		),
 	)

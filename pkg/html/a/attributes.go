@@ -80,6 +80,10 @@ func Type(val string) A {
 	return Attr("type", val)
 }
 
+func Value(val string) A {
+	return Attr("value", val)
+}
+
 func Width(val string) A {
 	return Attr("width", val)
 }

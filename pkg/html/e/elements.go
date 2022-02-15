@@ -342,3 +342,7 @@ func Textarea(attrs ...a.A) *E {
 func Select(attrs ...a.A) *E {
 	return Elm("select", attrs)
 }
+
+func Option(attrs ...a.A) *E {
+	return Elm("option", attrs)
+}

@@ -25,6 +25,10 @@ func New(data IData) *html.Component {
 		*data.CategoryList(),
 	}
 
+	if len(c.CurrentCategory.Path) == 0 {
+		return &html.Component{}
+	}
+
 	return c.html()
 }
 

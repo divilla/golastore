@@ -87,7 +87,7 @@ func (c *component) html() *html.Component {
 	return html.NewComponent(
 		e.Aside(a.Class("menu")).Children(
 			e.Ul(a.Class("menu-list")).Children(
-				items...,
+				path...,
 			),
 		),
 	)

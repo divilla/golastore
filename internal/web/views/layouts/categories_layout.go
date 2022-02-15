@@ -21,7 +21,7 @@ func NewCategoriesLayout(data ICategoriesLayoutData, view html.IView) *html.Layo
 	return NewMainLayout(data,
 		html.NewLayout(
 			e.Div(a.Class("columns")).Children(
-				e.Div(a.Class("column is-one-quarter"), a.Style("max-width: 300px")).Children(
+				e.Div(a.Class("column is-one-sixth-fullhd is-one-fifth-widescreen is-one-quarter-desktop is-one-third-tablet"), a.Style("min-width: 300px")).Children(
 					category_list.New(data),
 				),
 				e.Div(a.Class("column")).Children(

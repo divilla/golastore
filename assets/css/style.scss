@@ -3,6 +3,11 @@
 @import "./node_modules/bulma/sass/utilities/initial-variables";
 @import "./node_modules/bulma/sass/utilities/functions";
 
+$fullhd:     29 * 64px + (2 * $gap);
+$widescreen: 23 * 64px + (2 * $gap);
+$desktop:    20 * 64px + (2 * $gap);
+$tablet:     15 * 64px + (2 * $gap);
+
 $red: #cc0f35;
 $orange: #ff5740;
 $warning: $orange;
@@ -230,6 +235,15 @@ a.two-lines-text {
 
 a.two-lines-text:hover {
     color: $link;
+}
+
+.pagination-ellipsis {
+  @include until($desktop) {
+    display: none;
+  }
+  @include from($widescreen) {
+    display: list-item;
+  }
 }
 
 .pagination-previous, .pagination-next, .pagination-link {

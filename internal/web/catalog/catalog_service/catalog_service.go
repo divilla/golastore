@@ -65,7 +65,7 @@ func (s *CatalogService) CategoryProductList(ctx context.Context, dto *CatalogCa
 	if err != nil {
 		return nil, err
 	}
-	pagination := view_model.NewPagination(totalItems, dto.ItemsPerPage, dto.Page, linkSpreadDefault, paginationURLBuilder)
+	pagination := view_model.NewPagination(dto.Page, dto.ItemsPerPage, totalItems, linkSpreadDefault, paginationURLBuilder)
 
 	breadcrumbs := view_model.NewBreadcrumbsViewModel("Home")
 	for _, cat := range category.Path {

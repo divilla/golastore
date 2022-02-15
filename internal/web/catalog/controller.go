@@ -38,7 +38,7 @@ func (c *catalogController) index(ctx *middleware.CustomContext) error {
 		return err
 	}
 
-	return ctx.RenderView(http.StatusOK, catalog.NewCategoryView(model))
+	return ctx.RenderView(http.StatusOK, catalog.NewBrowseProductsView(model))
 }
 
 func (c *catalogController) category(ctx *middleware.CustomContext) error {
@@ -52,5 +52,5 @@ func (c *catalogController) category(ctx *middleware.CustomContext) error {
 		return err
 	}
 
-	return ctx.RenderView(http.StatusOK, catalog.NewCategoryView(model))
+	return ctx.RenderView(http.StatusOK, catalog.NewBrowseProductsView(model))
 }
