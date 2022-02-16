@@ -14919,8 +14919,8 @@ hr {
 .content table.table-center .buttons {
   align-items: center;
   display: inline-block;
-  flex-wrap: none;
-  justify-content: none; }
+  flex-wrap: nowrap;
+  justify-content: center; }
 
 .content table.table-center .button {
   margin-bottom: 0; }
@@ -14934,9 +14934,29 @@ hr {
   height: 100%;
   padding: 0 0.5em; }
 
+.section {
+  padding: 1.5rem 0; }
+
 .card {
   box-shadow: none;
   border: 1px solid #eeeeee; }
+
+@media (min-width: 40em) {
+  .columns.items {
+    display: flex; } }
+
+@media (min-width: 60em) {
+  .section {
+    padding: 1.5rem; } }
+
+@media (min-width: 80em) {
+  .columns.items {
+    padding: 8px; } }
+
+.card.item {
+  border-radius: 0;
+  padding: 8px;
+  margin: 0 -1px -1px 0 !important; }
 
 .card-image {
   height: 240px;
@@ -14971,11 +14991,14 @@ a.two-lines-text {
 a.two-lines-text:hover {
   color: #485fc7; }
 
-@media screen and (max-width: 1343px) {
-  .pagination-ellipsis {
-    display: none; } }
+.pagination-ellipsis {
+  display: none; }
 
-@media screen and (min-width: 1536px) {
+@media (min-width: 60em) {
+  .pagination-list {
+    justify-content: center; } }
+
+@media (min-width: 80em) {
   .pagination-ellipsis {
     display: list-item; } }
 
@@ -15005,3 +15028,327 @@ a.two-lines-text:hover {
 a.is-disabled:hover,
 button.is-disabled:hover {
   cursor: not-allowed; }
+
+.row {
+  box-sizing: border-box;
+  display: flex;
+  flex: 0 1 auto;
+  flex-direction: row;
+  flex-wrap: wrap;
+  margin-right: 32px;
+  margin-left: 32px; }
+
+.cols,
+.cols-1 {
+  flex-grow: 1;
+  max-width: 100%; }
+
+.cols-2 {
+  flex-basis: 50%;
+  max-width: 50%;
+  box-sizing: border-box; }
+
+.cols-3 {
+  flex-basis: 33.33333%;
+  max-width: 33.33333%;
+  box-sizing: border-box; }
+
+.cols-4 {
+  flex-basis: 25%;
+  max-width: 25%;
+  box-sizing: border-box; }
+
+.cols-5 {
+  flex-basis: 20%;
+  max-width: 20%;
+  box-sizing: border-box; }
+
+.cols-6 {
+  flex-basis: 16.66667%;
+  max-width: 16.66667%;
+  box-sizing: border-box; }
+
+.cols-7 {
+  flex-basis: 14.28571%;
+  max-width: 14.28571%;
+  box-sizing: border-box; }
+
+.cols-8 {
+  flex-basis: 12.5%;
+  max-width: 12.5%;
+  box-sizing: border-box; }
+
+.cols-9 {
+  flex-basis: 11.11111%;
+  max-width: 11.11111%;
+  box-sizing: border-box; }
+
+.cols-10 {
+  flex-basis: 10%;
+  max-width: 10%;
+  box-sizing: border-box; }
+
+.cols-11 {
+  flex-basis: 9.09091%;
+  max-width: 9.09091%;
+  box-sizing: border-box; }
+
+.cols-12 {
+  flex-basis: 8.33333%;
+  max-width: 8.33333%;
+  box-sizing: border-box; }
+
+@media (min-width: 40em) {
+  .cols-xs,
+  .cols-xs-1 {
+    flex-grow: 1;
+    flex-basis: 0;
+    max-width: 100%; }
+  .cols-xs-2 {
+    flex-basis: 50%;
+    max-width: 50%;
+    box-sizing: border-box; }
+  .cols-xs-3 {
+    flex-basis: 33.33333%;
+    max-width: 33.33333%;
+    box-sizing: border-box; }
+  .cols-xs-4 {
+    flex-basis: 25%;
+    max-width: 25%;
+    box-sizing: border-box; }
+  .cols-xs-5 {
+    flex-basis: 20%;
+    max-width: 20%;
+    box-sizing: border-box; }
+  .cols-xs-6 {
+    flex-basis: 16.66667%;
+    max-width: 16.66667%;
+    box-sizing: border-box; }
+  .cols-xs-7 {
+    flex-basis: 14.28571%;
+    max-width: 14.28571%;
+    box-sizing: border-box; }
+  .cols-xs-8 {
+    flex-basis: 12.5%;
+    max-width: 12.5%;
+    box-sizing: border-box; }
+  .cols-xs-9 {
+    flex-basis: 11.11111%;
+    max-width: 11.11111%;
+    box-sizing: border-box; }
+  .cols-xs-10 {
+    flex-basis: 10%;
+    max-width: 10%;
+    box-sizing: border-box; }
+  .cols-xs-11 {
+    flex-basis: 9.09091%;
+    max-width: 9.09091%;
+    box-sizing: border-box; }
+  .cols-xs-12 {
+    flex-basis: 8.33333%;
+    max-width: 8.33333%;
+    box-sizing: border-box; } }
+
+@media (min-width: 60em) {
+  .cols-sm,
+  .cols-sm-1 {
+    flex-grow: 1;
+    flex-basis: 0;
+    max-width: 100%; }
+  .cols-sm-2 {
+    flex-basis: 50%;
+    max-width: 50%;
+    box-sizing: border-box; }
+  .cols-sm-3 {
+    flex-basis: 33.33333%;
+    max-width: 33.33333%;
+    box-sizing: border-box; }
+  .cols-sm-4 {
+    flex-basis: 25%;
+    max-width: 25%;
+    box-sizing: border-box; }
+  .cols-sm-5 {
+    flex-basis: 20%;
+    max-width: 20%;
+    box-sizing: border-box; }
+  .cols-sm-6 {
+    flex-basis: 16.66667%;
+    max-width: 16.66667%;
+    box-sizing: border-box; }
+  .cols-sm-7 {
+    flex-basis: 14.28571%;
+    max-width: 14.28571%;
+    box-sizing: border-box; }
+  .cols-sm-8 {
+    flex-basis: 12.5%;
+    max-width: 12.5%;
+    box-sizing: border-box; }
+  .cols-sm-9 {
+    flex-basis: 11.11111%;
+    max-width: 11.11111%;
+    box-sizing: border-box; }
+  .cols-sm-10 {
+    flex-basis: 10%;
+    max-width: 10%;
+    box-sizing: border-box; }
+  .cols-sm-11 {
+    flex-basis: 9.09091%;
+    max-width: 9.09091%;
+    box-sizing: border-box; }
+  .cols-sm-12 {
+    flex-basis: 8.33333%;
+    max-width: 8.33333%;
+    box-sizing: border-box; } }
+
+@media (min-width: 80em) {
+  .cols-md,
+  .cols-md-1 {
+    flex-grow: 1;
+    flex-basis: 0;
+    max-width: 100%; }
+  .cols-md-2 {
+    flex-basis: 50%;
+    max-width: 50%;
+    box-sizing: border-box; }
+  .cols-md-3 {
+    flex-basis: 33.33333%;
+    max-width: 33.33333%;
+    box-sizing: border-box; }
+  .cols-md-4 {
+    flex-basis: 25%;
+    max-width: 25%;
+    box-sizing: border-box; }
+  .cols-md-5 {
+    flex-basis: 20%;
+    max-width: 20%;
+    box-sizing: border-box; }
+  .cols-md-6 {
+    flex-basis: 16.66667%;
+    max-width: 16.66667%;
+    box-sizing: border-box; }
+  .cols-md-7 {
+    flex-basis: 14.28571%;
+    max-width: 14.28571%;
+    box-sizing: border-box; }
+  .cols-md-8 {
+    flex-basis: 12.5%;
+    max-width: 12.5%;
+    box-sizing: border-box; }
+  .cols-md-9 {
+    flex-basis: 11.11111%;
+    max-width: 11.11111%;
+    box-sizing: border-box; }
+  .cols-md-10 {
+    flex-basis: 10%;
+    max-width: 10%;
+    box-sizing: border-box; }
+  .cols-md-11 {
+    flex-basis: 9.09091%;
+    max-width: 9.09091%;
+    box-sizing: border-box; }
+  .cols-md-12 {
+    flex-basis: 8.33333%;
+    max-width: 8.33333%;
+    box-sizing: border-box; } }
+
+@media (min-width: 100em) {
+  .cols-lg,
+  .cols-lg-1 {
+    flex-grow: 1;
+    flex-basis: 0;
+    max-width: 100%; }
+  .cols-lg-2 {
+    flex-basis: 50%;
+    max-width: 50%;
+    box-sizing: border-box; }
+  .cols-lg-3 {
+    flex-basis: 33.33333%;
+    max-width: 33.33333%;
+    box-sizing: border-box; }
+  .cols-lg-4 {
+    flex-basis: 25%;
+    max-width: 25%;
+    box-sizing: border-box; }
+  .cols-lg-5 {
+    flex-basis: 20%;
+    max-width: 20%;
+    box-sizing: border-box; }
+  .cols-lg-6 {
+    flex-basis: 16.66667%;
+    max-width: 16.66667%;
+    box-sizing: border-box; }
+  .cols-lg-7 {
+    flex-basis: 14.28571%;
+    max-width: 14.28571%;
+    box-sizing: border-box; }
+  .cols-lg-8 {
+    flex-basis: 12.5%;
+    max-width: 12.5%;
+    box-sizing: border-box; }
+  .cols-lg-9 {
+    flex-basis: 11.11111%;
+    max-width: 11.11111%;
+    box-sizing: border-box; }
+  .cols-lg-10 {
+    flex-basis: 10%;
+    max-width: 10%;
+    box-sizing: border-box; }
+  .cols-lg-11 {
+    flex-basis: 9.09091%;
+    max-width: 9.09091%;
+    box-sizing: border-box; }
+  .cols-lg-12 {
+    flex-basis: 8.33333%;
+    max-width: 8.33333%;
+    box-sizing: border-box; } }
+
+@media (min-width: 120em) {
+  .cols-xl,
+  .cols-xl-1 {
+    flex-grow: 1;
+    flex-basis: 0;
+    max-width: 100%; }
+  .cols-xl-2 {
+    flex-basis: 50%;
+    max-width: 50%;
+    box-sizing: border-box; }
+  .cols-xl-3 {
+    flex-basis: 33.33333%;
+    max-width: 33.33333%;
+    box-sizing: border-box; }
+  .cols-xl-4 {
+    flex-basis: 25%;
+    max-width: 25%;
+    box-sizing: border-box; }
+  .cols-xl-5 {
+    flex-basis: 20%;
+    max-width: 20%;
+    box-sizing: border-box; }
+  .cols-xl-6 {
+    flex-basis: 16.66667%;
+    max-width: 16.66667%;
+    box-sizing: border-box; }
+  .cols-xl-7 {
+    flex-basis: 14.28571%;
+    max-width: 14.28571%;
+    box-sizing: border-box; }
+  .cols-xl-8 {
+    flex-basis: 12.5%;
+    max-width: 12.5%;
+    box-sizing: border-box; }
+  .cols-xl-9 {
+    flex-basis: 11.11111%;
+    max-width: 11.11111%;
+    box-sizing: border-box; }
+  .cols-xl-10 {
+    flex-basis: 10%;
+    max-width: 10%;
+    box-sizing: border-box; }
+  .cols-xl-11 {
+    flex-basis: 9.09091%;
+    max-width: 9.09091%;
+    box-sizing: border-box; }
+  .cols-xl-12 {
+    flex-basis: 8.33333%;
+    max-width: 8.33333%;
+    box-sizing: border-box; } }

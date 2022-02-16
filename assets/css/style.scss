@@ -3,6 +3,14 @@
 @import "./node_modules/bulma/sass/utilities/initial-variables";
 @import "./node_modules/bulma/sass/utilities/functions";
 
+$xs:  40em;
+$sm:  60em;
+$md:  80em;
+$lg: 100em;
+$xl: 120em;
+
+$per: 100%;
+
 $fullhd:     29 * 64px + (2 * $gap);
 $widescreen: 23 * 64px + (2 * $gap);
 $desktop:    20 * 64px + (2 * $gap);
@@ -174,8 +182,8 @@ hr {
 .content table.table-center .buttons {
     align-items: center;
     display: inline-block;
-    flex-wrap: none;
-    justify-content: none;
+    flex-wrap: nowrap;
+    justify-content: center;
 }
 
 .content table.table-center .button {
@@ -193,9 +201,37 @@ hr {
     padding: 0 0.5em;
 }
 
+.section {
+    padding: 1.5rem 0;
+}
+
 .card {
     box-shadow: none;
     border: 1px solid #eeeeee;
+}
+
+@media (min-width: $xs) {
+  .columns.items {
+    display: flex;
+  }
+}
+
+@media (min-width: $sm) {
+  .section {
+    padding: 1.5rem;
+  }
+}
+
+@media (min-width: $md) {
+  .columns.items {
+    padding: $gap/4;
+  }
+}
+
+.card.item {
+    border-radius: 0;
+    padding: $gap/4;
+    margin: 0 -1px -1px 0 !important;
 }
 
 .card-image {
@@ -238,10 +274,17 @@ a.two-lines-text:hover {
 }
 
 .pagination-ellipsis {
-  @include until($desktop) {
     display: none;
+}
+
+@media (min-width: $sm) {
+  .pagination-list {
+    justify-content: center;
   }
-  @include from($widescreen) {
+}
+
+@media (min-width: $md) {
+  .pagination-ellipsis {
     display: list-item;
   }
 }
@@ -272,4 +315,115 @@ a.two-lines-text:hover {
 a.is-disabled:hover,
 button.is-disabled:hover {
     cursor:not-allowed;
+}
+
+// ------------------------------------------------------------------------------------------------------- //
+
+.row {
+  box-sizing: border-box;
+  display: flex;
+  flex: 0 1 auto;
+  flex-direction: row;
+  flex-wrap: wrap;
+  margin-right: $gap;
+  margin-left: $gap;
+}
+
+.cols,
+.cols-1 {
+  flex-grow: 1;
+  max-width: 100%;
+}
+
+@for $i from 2 through 12 {
+  .cols-#{$i} {
+    flex-basis: $per/$i;
+    max-width:  $per/$i;
+    box-sizing: border-box;
+  }
+}
+
+@media (min-width: $xs) {
+  .cols-xs,
+  .cols-xs-1 {
+    flex-grow: 1;
+    flex-basis: 0;
+    max-width: 100%;
+  }
+
+  @for $i from 2 through 12 {
+    .cols-xs-#{$i} {
+      flex-basis: $per/$i;
+      max-width:  $per/$i;
+      box-sizing: border-box;
+    }
+  }
+}
+
+@media (min-width: $sm) {
+  .cols-sm,
+  .cols-sm-1 {
+    flex-grow: 1;
+    flex-basis: 0;
+    max-width: 100%;
+  }
+
+  @for $i from 2 through 12 {
+    .cols-sm-#{$i} {
+      flex-basis: $per/$i;
+      max-width:  $per/$i;
+      box-sizing: border-box;
+    }
+  }
+}
+
+@media (min-width: $md) {
+  .cols-md,
+  .cols-md-1 {
+    flex-grow: 1;
+    flex-basis: 0;
+    max-width: 100%;
+  }
+
+  @for $i from 2 through 12 {
+    .cols-md-#{$i} {
+      flex-basis: $per/$i;
+      max-width:  $per/$i;
+      box-sizing: border-box;
+    }
+  }
+}
+
+@media (min-width: $lg) {
+  .cols-lg,
+  .cols-lg-1 {
+    flex-grow: 1;
+    flex-basis: 0;
+    max-width: 100%;
+  }
+
+  @for $i from 2 through 12 {
+    .cols-lg-#{$i} {
+      flex-basis: $per/$i;
+      max-width:  $per/$i;
+      box-sizing: border-box;
+    }
+  }
+}
+
+@media (min-width: $xl) {
+  .cols-xl,
+  .cols-xl-1 {
+    flex-grow: 1;
+    flex-basis: 0;
+    max-width: 100%;
+  }
+
+  @for $i from 2 through 12 {
+    .cols-xl-#{$i} {
+      flex-basis: $per/$i;
+      max-width:  $per/$i;
+      box-sizing: border-box;
+    }
+  }
 }

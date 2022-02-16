@@ -53,14 +53,14 @@ func (c *component) html() *html.Component {
 
 	return html.NewComponent(
 		e.Div(a.Class("columns is-multiline")).Children(
-			e.Div(a.Class("column is-full-mobile is-8-widescreen")).Children(
+			e.Div(a.Class("cols-1"), a.Style("padding: 0.5rem")).Children(
 				e.Nav(a.Class("pagination"), a.Role("navigation"), a.AriaLabel("pagination")).Children(
 					e.Ul(a.Class("pagination-list")).Children(
 						links...,
 					),
 				),
 			),
-			e.Div(a.Class("column is-half-mobile is-2-widescreen")).Children(
+			e.Div(a.Class("cols-lg-6 cols-2"), a.Style("padding: 0.5rem; display: flex; justify-content: center")).Children(
 				e.Div(a.Class("select")).Children(
 					e.Select().Children(
 						e.Option(a.Value("default")).Text("Default Sort"),
@@ -71,7 +71,7 @@ func (c *component) html() *html.Component {
 					),
 				),
 			),
-			e.Div(a.Class("column is-half-mobile is-2-widescreen")).Children(
+			e.Div(a.Class("cols-lg-6 cols-2"), a.Style("padding: 0.5rem; display: flex; justify-content: center")).Children(
 				e.Div(a.Class("select")).Children(
 					e.Select().Children(
 						e.Option(a.Value("default")).Text("Default Sort"),

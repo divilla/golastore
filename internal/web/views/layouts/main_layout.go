@@ -25,7 +25,6 @@ func NewMainLayout(data IMainLayoutData, view html.IView) *html.Layout {
 				e.Meta(a.A{K: "charset", V: "utf-8"}),
 				e.Meta(a.A{K: "name", V: "viewport"}, a.A{K: "content", V: "width=device-width, initial-scale=1"}),
 				e.Title().Text(data.WebPage().MetaTitle),
-				e.Link(a.Rel("stylesheet"), a.Href("https://cdnjs.cloudflare.com/ajax/libs/flexboxgrid/6.3.1/flexboxgrid.min.css"), a.Integrity("ssha512-YHuwZabI2zi0k7c9vtg8dK/63QB0hLvD4thw44dFo/TfBFVVQOqEG9WpviaEpbyvgOIYLXF1n7xDUfU3GDs0sw=="), a.CrossOrigin("anonymous"), a.RefererPolicy("no-referrer")),
 				e.Link(a.Rel("stylesheet"), a.Href("https://cdnjs.cloudflare.com/ajax/libs/MaterialDesign-Webfont/6.5.95/css/materialdesignicons.css"), a.Integrity("sha512-x6bCTnc3rzkrdNmyFuJBWwOF23tzxLalBSQ2N3BEYKLWOpjfpYpnBrE0wlRHI/j4Oyv72/VuAewe2DmEl/NXdA=="), a.CrossOrigin("anonymous"), a.RefererPolicy("no-referrer")),
 				e.Link(a.Rel("stylesheet"), a.Href("/assets/css/style.css?id="+rnd)),
 			),
@@ -77,7 +76,7 @@ func NewMainLayout(data IMainLayoutData, view html.IView) *html.Layout {
 					),
 				),
 				e.HR(a.Style("margin: 0 1.5rem;")),
-				e.Section(a.Class("section"), a.Style("padding: 1.5rem;")).Children(
+				e.Section(a.Class("section")).Children(
 					view,
 				),
 			),

@@ -14,8 +14,8 @@ func NewBrowseProductsView(m *catalog_service.CatalogCategoryModel) *html.Layout
 	items := make([]html.Renderer, len(m.ListProducts()))
 	for key, item := range m.ListProducts() {
 		items[key] =
-			e.Div(a.Class("column is-one-fifth-fullhd is-one-quarter-widescreen is-one-third-desktop is-half-tablet")).Children(
-				e.Div(a.Class("card")).Children(
+			e.Div(a.Class("cols-xl-5 cols-lg-4 cols-md-3 cols-sm-2 cols-1")).Children(
+				e.Div(a.Class("card item")).Children(
 					e.Div(a.Class("card-content"), a.Style("padding: 0.5rem 0.5rem 0 0.5rem")).Children(
 						e.Div(a.Class("content")).Children(
 							e.Table(a.Class("table-center-middle")).Children(
@@ -115,7 +115,7 @@ func NewBrowseProductsView(m *catalog_service.CatalogCategoryModel) *html.Layout
 	return layouts.NewCategoriesLayout(m,
 		html.NewView(
 			paginationComponent,
-			e.Div(a.Class("columns is-multiline")).Children(
+			e.Div(a.Class("columns items is-multiline")).Children(
 				items...,
 			),
 			paginationComponent,
