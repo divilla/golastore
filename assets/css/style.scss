@@ -205,9 +205,17 @@ hr {
     padding: 1.5rem 0;
 }
 
+.items {
+  box-shadow: none;
+  border-radius: 0;
+  border-right: 1px solid #eeeeee;
+}
+
 .card {
     box-shadow: none;
-    border: 1px solid #eeeeee;
+    border-radius: 0;
+    border-top: 1px solid #eeeeee;
+    border-left: 1px solid #eeeeee;
 }
 
 @media (min-width: $xs) {
@@ -228,10 +236,10 @@ hr {
   }
 }
 
-.card.item {
-    border-radius: 0;
-    padding: $gap/4;
-    margin: 0 -1px -1px 0 !important;
+@media (min-width: $xl) {
+  .columns.items {
+    padding-right: 0;
+  }
 }
 
 .card-image {
@@ -261,15 +269,15 @@ hr {
     padding: 1rem;
 }
 
-a.two-lines-text {
-    display: block;
-    height: $body-font-size * $body-line-height * 3;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    color: $dark;
+a.three-lines-text {
+  display: block;
+  height: $body-line-height * 3em;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  color: $dark;
 }
 
-a.two-lines-text:hover {
+a.three-lines-text:hover {
     color: $link;
 }
 

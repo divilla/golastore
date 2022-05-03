@@ -231,7 +231,7 @@ func Small(attrs ...a.A) *E {
 }
 
 func Span(attrs ...a.A) *E {
-	return Elm("span", attrs)
+	return Elm("span", attrs).Open()
 }
 
 func Strong(attrs ...a.A) *E {

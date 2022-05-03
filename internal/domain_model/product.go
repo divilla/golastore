@@ -9,7 +9,7 @@ import (
 )
 
 type (
-	ListProduct struct {
+	ProductListItem struct {
 		Id          uuid.UUID
 		Code        string
 		Name        string
@@ -20,23 +20,23 @@ type (
 	}
 )
 
-func (p *ListProduct) LinkToProduct() string {
+func (p *ProductListItem) LinkToProduct() string {
 	return fmt.Sprintf("/p/%s", p.Slug)
 }
 
-func (p *ListProduct) ImageURL() string {
+func (p *ProductListItem) ImageURL() string {
 	return fmt.Sprintf("https://yekupi.blob.core.windows.net/ekupihr/300Wx300H/%s_1.image", p.Code)
 }
 
-func (p *ListProduct) OldPriceFormat() string {
+func (p *ProductListItem) OldPriceFormat() string {
 	return format.MoneyNumeric(p.OldPrice)
 }
 
-func (p *ListProduct) PriceFormat() string {
+func (p *ProductListItem) PriceFormat() string {
 	return format.MoneyNumeric(p.Price)
 }
 
-func (p *ListProduct) Discount() string {
+func (p *ProductListItem) Discount() string {
 	if p.OldPrice.Status == pgtype.Null || p.Price.Status == pgtype.Null {
 		return ""
 	}

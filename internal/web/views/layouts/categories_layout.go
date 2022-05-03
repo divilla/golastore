@@ -20,7 +20,7 @@ type (
 func NewCategoriesLayout(data ICategoriesLayoutData, view html.IView) *html.Layout {
 	return NewMainLayout(data,
 		html.NewLayout(
-			e.Div(a.Class("columns items")).Children(
+			e.Div(a.Class("columns")).Children(
 				e.Div(a.Class("column cols-xl-6 cols-lg-5 cols-md-4 cols-sm-3 cols-xs-2 cols-1")).Children(
 					category_list.New(data),
 				),

@@ -18,7 +18,7 @@ type (
 		categoryList *view_model.CategoryList
 		breadcrumbs  *view_model.Breadcrumbs
 		pagination   *view_model.Pagination
-		listProducts []*domain_model.ListProduct
+		listProducts []*domain_model.ProductListItem
 	}
 )
 
@@ -27,7 +27,7 @@ func NewCatalogCategoryModel(
 	categoryList *view_model.CategoryList,
 	breadcrumbs *view_model.Breadcrumbs,
 	pagination *view_model.Pagination,
-	listProducts []*domain_model.ListProduct,
+	listProducts []*domain_model.ProductListItem,
 ) *CatalogCategoryModel {
 	return &CatalogCategoryModel{
 		webPage:      webPage,
@@ -54,6 +54,6 @@ func (m *CatalogCategoryModel) Pagination() *view_model.Pagination {
 	return m.pagination
 }
 
-func (m *CatalogCategoryModel) ListProducts() []*domain_model.ListProduct {
+func (m *CatalogCategoryModel) ListProducts() []*domain_model.ProductListItem {
 	return m.listProducts
 }

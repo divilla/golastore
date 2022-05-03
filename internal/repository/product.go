@@ -37,7 +37,7 @@ func (r *Product) SearchCount(ctx context.Context, search string) (int64, error)
 	return total, err
 }
 
-func (r *Product) Search(ctx context.Context, search string, limit, offset int64) ([]*domain_model.ListProduct, error) {
+func (r *Product) Search(ctx context.Context, search string, limit, offset int64) ([]*domain_model.ProductListItem, error) {
 	conn, err := r.pool.Acquire(ctx)
 	if err != nil {
 		return nil, err
@@ -61,9 +61,9 @@ func (r *Product) Search(ctx context.Context, search string, limit, offset int64
 	}
 	defer rows.Close()
 
-	var lps []*domain_model.ListProduct
+	var lps []*domain_model.ProductListItem
 	for rows.Next() {
-		var lp domain_model.ListProduct
+		var lp domain_model.ProductListItem
 		if err = rows.Scan(&lp.Id, &lp.Code, &lp.Name, &lp.Slug, &lp.OldPrice, &lp.Price, &lp.Description); err != nil {
 			return nil, err
 		}

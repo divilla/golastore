@@ -14937,9 +14937,16 @@ hr {
 .section {
   padding: 1.5rem 0; }
 
+.items {
+  box-shadow: none;
+  border-radius: 0;
+  border-right: 1px solid #eeeeee; }
+
 .card {
   box-shadow: none;
-  border: 1px solid #eeeeee; }
+  border-radius: 0;
+  border-top: 1px solid #eeeeee;
+  border-left: 1px solid #eeeeee; }
 
 @media (min-width: 40em) {
   .columns.items {
@@ -14953,10 +14960,9 @@ hr {
   .columns.items {
     padding: 8px; } }
 
-.card.item {
-  border-radius: 0;
-  padding: 8px;
-  margin: 0 -1px -1px 0 !important; }
+@media (min-width: 120em) {
+  .columns.items {
+    padding-right: 0; } }
 
 .card-image {
   height: 240px;
@@ -14981,14 +14987,14 @@ hr {
 .card-content {
   padding: 1rem; }
 
-a.two-lines-text {
+a.three-lines-text {
   display: block;
   height: 4.5em;
   overflow: hidden;
   text-overflow: ellipsis;
   color: #363636; }
 
-a.two-lines-text:hover {
+a.three-lines-text:hover {
   color: #485fc7; }
 
 .pagination-ellipsis {
