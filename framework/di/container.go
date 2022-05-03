@@ -4,6 +4,7 @@ import (
 	"github.com/divilla/golastore/framework/config"
 	"github.com/divilla/golastore/internal/cache"
 	"github.com/divilla/golastore/internal/repository"
+	"github.com/divilla/golastore/internal/web/cart"
 	"github.com/divilla/golastore/internal/web/catalog"
 	"github.com/divilla/golastore/internal/web/catalog/catalog_service"
 	"github.com/divilla/golastore/internal/web/maintenance/maintenance_controller"
@@ -35,6 +36,9 @@ func NewContainer(e *echo.Echo) *Container {
 
 	catalogService := catalog_service.NewCatalogService(appCache, taxonomyCache, productRepository)
 	catalog.NewController(e, catalogService)
+
+	cartService := cart.NewService()
+	cart.NewController(e, cartService)
 
 	maintenanceService := maintenance_service.New(pool)
 	maintenance_controller.New(e, maintenanceService)
